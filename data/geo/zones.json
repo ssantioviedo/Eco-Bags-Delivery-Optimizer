@@ -1,0 +1,18 @@
+{
+  "CABA": {
+    "name": "Buenos Aires City",
+    "color": "#FF6B6B"
+  },
+  "NORTH_ZONE": {
+    "name": "North Zone",
+    "color": "#4ECDC4"
+  },
+  "SOUTH_ZONE": {
+    "name": "South Zone",
+    "color": "#45B7D1"
+  },
+  "WEST_ZONE": {
+    "name": "West Zone",
+    "color": "#96CEB4"
+  }
+}

@@ -1,0 +1,476 @@
+{
+  "palermo": {
+    "name": "Palermo",
+    "zone_id": "CABA",
+    "latitude": -34.5875,
+    "longitude": -58.4311
+  },
+  "recoleta": {
+    "name": "Recoleta",
+    "zone_id": "CABA",
+    "latitude": -34.5889,
+    "longitude": -58.3939
+  },
+  "belgrano": {
+    "name": "Belgrano",
+    "zone_id": "CABA",
+    "latitude": -34.5625,
+    "longitude": -58.4580
+  },
+  "caballito": {
+    "name": "Caballito",
+    "zone_id": "CABA",
+    "latitude": -34.6186,
+    "longitude": -58.4428
+  },
+  "almagro": {
+    "name": "Almagro",
+    "zone_id": "CABA",
+    "latitude": -34.6089,
+    "longitude": -58.4206
+  },
+  "villa_crespo": {
+    "name": "Villa Crespo",
+    "zone_id": "CABA",
+    "latitude": -34.5989,
+    "longitude": -58.4397
+  },
+  "san_telmo": {
+    "name": "San Telmo",
+    "zone_id": "CABA",
+    "latitude": -34.6214,
+    "longitude": -58.3714
+  },
+  "la_boca": {
+    "name": "La Boca",
+    "zone_id": "CABA",
+    "latitude": -34.6345,
+    "longitude": -58.3631
+  },
+  "barracas": {
+    "name": "Barracas",
+    "zone_id": "CABA",
+    "latitude": -34.6453,
+    "longitude": -58.3856
+  },
+  "constitucion": {
+    "name": "Constitucion",
+    "zone_id": "CABA",
+    "latitude": -34.6275,
+    "longitude": -58.3828
+  },
+  "monserrat": {
+    "name": "Monserrat",
+    "zone_id": "CABA",
+    "latitude": -34.6128,
+    "longitude": -58.3797
+  },
+  "retiro": {
+    "name": "Retiro",
+    "zone_id": "CABA",
+    "latitude": -34.5922,
+    "longitude": -58.3750
+  },
+  "san_nicolas": {
+    "name": "San Nicolas",
+    "zone_id": "CABA",
+    "latitude": -34.6039,
+    "longitude": -58.3817
+  },
+  "puerto_madero": {
+    "name": "Puerto Madero",
+    "zone_id": "CABA",
+    "latitude": -34.6158,
+    "longitude": -58.3628
+  },
+  "flores": {
+    "name": "Flores",
+    "zone_id": "CABA",
+    "latitude": -34.6344,
+    "longitude": -58.4631
+  },
+  "floresta": {
+    "name": "Floresta",
+    "zone_id": "CABA",
+    "latitude": -34.6300,
+    "longitude": -58.4850
+  },
+  "villa_devoto": {
+    "name": "Villa Devoto",
+    "zone_id": "CABA",
+    "latitude": -34.5989,
+    "longitude": -58.5136
+  },
+  "villa_urquiza": {
+    "name": "Villa Urquiza",
+    "zone_id": "CABA",
+    "latitude": -34.5722,
+    "longitude": -58.4917
+  },
+  "nunez": {
+    "name": "Nunez",
+    "zone_id": "CABA",
+    "latitude": -34.5456,
+    "longitude": -58.4561
+  },
+  "colegiales": {
+    "name": "Colegiales",
+    "zone_id": "CABA",
+    "latitude": -34.5742,
+    "longitude": -58.4494
+  },
+  "chacarita": {
+    "name": "Chacarita",
+    "zone_id": "CABA",
+    "latitude": -34.5872,
+    "longitude": -58.4550
+  },
+  "paternal": {
+    "name": "Paternal",
+    "zone_id": "CABA",
+    "latitude": -34.5986,
+    "longitude": -58.4669
+  },
+  "boedo": {
+    "name": "Boedo",
+    "zone_id": "CABA",
+    "latitude": -34.6289,
+    "longitude": -58.4172
+  },
+  "parque_patricios": {
+    "name": "Parque Patricios",
+    "zone_id": "CABA",
+    "latitude": -34.6383,
+    "longitude": -58.4003
+  },
+  "nueva_pompeya": {
+    "name": "Nueva Pompeya",
+    "zone_id": "CABA",
+    "latitude": -34.6514,
+    "longitude": -58.4189
+  },
+  "vicente_lopez": {
+    "name": "Vicente Lopez",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.5257,
+    "longitude": -58.4738
+  },
+  "olivos": {
+    "name": "Olivos",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.5106,
+    "longitude": -58.4836
+  },
+  "san_isidro": {
+    "name": "San Isidro",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4708,
+    "longitude": -58.5117
+  },
+  "martinez": {
+    "name": "Martinez",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4928,
+    "longitude": -58.5050
+  },
+  "acassuso": {
+    "name": "Acassuso",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4792,
+    "longitude": -58.5097
+  },
+  "san_fernando": {
+    "name": "San Fernando",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4436,
+    "longitude": -58.5569
+  },
+  "tigre": {
+    "name": "Tigre",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4267,
+    "longitude": -58.5797
+  },
+  "nordelta": {
+    "name": "Nordelta",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4083,
+    "longitude": -58.6528
+  },
+  "pilar": {
+    "name": "Pilar",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4586,
+    "longitude": -58.9142
+  },
+  "del_viso": {
+    "name": "Del Viso",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4508,
+    "longitude": -58.8025
+  },
+  "escobar": {
+    "name": "Escobar",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.3517,
+    "longitude": -58.7978
+  },
+  "belen_de_escobar": {
+    "name": "Belen de Escobar",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.3464,
+    "longitude": -58.7928
+  },
+  "garin": {
+    "name": "Garin",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4231,
+    "longitude": -58.7289
+  },
+  "maschwitz": {
+    "name": "Ingeniero Maschwitz",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.3897,
+    "longitude": -58.7383
+  },
+  "don_torcuato": {
+    "name": "Don Torcuato",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4975,
+    "longitude": -58.6172
+  },
+  "boulogne": {
+    "name": "Boulogne",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.5014,
+    "longitude": -58.5569
+  },
+  "beccar": {
+    "name": "Beccar",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.4625,
+    "longitude": -58.5325
+  },
+  "florida": {
+    "name": "Florida",
+    "zone_id": "NORTH_ZONE",
+    "latitude": -34.5289,
+    "longitude": -58.4933
+  },
+  "avellaneda": {
+    "name": "Avellaneda",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.6603,
+    "longitude": -58.3656
+  },
+  "sarandi": {
+    "name": "Sarandi",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.6839,
+    "longitude": -58.3431
+  },
+  "wilde": {
+    "name": "Wilde",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7022,
+    "longitude": -58.3172
+  },
+  "quilmes": {
+    "name": "Quilmes",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7206,
+    "longitude": -58.2536
+  },
+  "bernal": {
+    "name": "Bernal",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7086,
+    "longitude": -58.2789
+  },
+  "berazategui": {
+    "name": "Berazategui",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7631,
+    "longitude": -58.2117
+  },
+  "florencio_varela": {
+    "name": "Florencio Varela",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.8128,
+    "longitude": -58.2756
+  },
+  "lanus": {
+    "name": "Lanus",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7031,
+    "longitude": -58.3925
+  },
+  "lanus_este": {
+    "name": "Lanus Este",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7086,
+    "longitude": -58.3778
+  },
+  "lanus_oeste": {
+    "name": "Lanus Oeste",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7008,
+    "longitude": -58.4097
+  },
+  "lomas_de_zamora": {
+    "name": "Lomas de Zamora",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7608,
+    "longitude": -58.4006
+  },
+  "banfield": {
+    "name": "Banfield",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7439,
+    "longitude": -58.3969
+  },
+  "temperley": {
+    "name": "Temperley",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7706,
+    "longitude": -58.3950
+  },
+  "adrogue": {
+    "name": "Adrogue",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.7997,
+    "longitude": -58.3897
+  },
+  "burzaco": {
+    "name": "Burzaco",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.8264,
+    "longitude": -58.3889
+  },
+  "claypole": {
+    "name": "Claypole",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.8019,
+    "longitude": -58.3344
+  },
+  "glew": {
+    "name": "Glew",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.8867,
+    "longitude": -58.3847
+  },
+  "longchamps": {
+    "name": "Longchamps",
+    "zone_id": "SOUTH_ZONE",
+    "latitude": -34.8511,
+    "longitude": -58.3869
+  },
+  "moron": {
+    "name": "Moron",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6514,
+    "longitude": -58.6194
+  },
+  "haedo": {
+    "name": "Haedo",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6453,
+    "longitude": -58.5936
+  },
+  "ramos_mejia": {
+    "name": "Ramos Mejia",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6408,
+    "longitude": -58.5631
+  },
+  "ciudadela": {
+    "name": "Ciudadela",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6383,
+    "longitude": -58.5339
+  },
+  "villa_luzuriaga": {
+    "name": "Villa Luzuriaga",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6656,
+    "longitude": -58.5850
+  },
+  "san_justo": {
+    "name": "San Justo",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6850,
+    "longitude": -58.5589
+  },
+  "tablada": {
+    "name": "Tablada",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6931,
+    "longitude": -58.5297
+  },
+  "caseros": {
+    "name": "Caseros",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6064,
+    "longitude": -58.5631
+  },
+  "martin_coronado": {
+    "name": "Martin Coronado",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.5894,
+    "longitude": -58.5825
+  },
+  "ciudad_jardin": {
+    "name": "Ciudad Jardin",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.5806,
+    "longitude": -58.5897
+  },
+  "ituzaingo": {
+    "name": "Ituzaingo",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6586,
+    "longitude": -58.6728
+  },
+  "castelar": {
+    "name": "Castelar",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6536,
+    "longitude": -58.6414
+  },
+  "merlo": {
+    "name": "Merlo",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6683,
+    "longitude": -58.7278
+  },
+  "moreno": {
+    "name": "Moreno",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6500,
+    "longitude": -58.7878
+  },
+  "paso_del_rey": {
+    "name": "Paso del Rey",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.6444,
+    "longitude": -58.7667
+  },
+  "san_miguel": {
+    "name": "San Miguel",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.5436,
+    "longitude": -58.7111
+  },
+  "jose_c_paz": {
+    "name": "Jose C. Paz",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.5133,
+    "longitude": -58.7639
+  },
+  "hurlingham": {
+    "name": "Hurlingham",
+    "zone_id": "WEST_ZONE",
+    "latitude": -34.5911,
+    "longitude": -58.6369
+  }
+}
