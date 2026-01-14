@@ -369,3 +369,133 @@ class DispatchCandidate(BaseModel):
     estimated_distance_km: Optional[float] = None
     estimated_time_min: Optional[int] = None
     route_sequence: Optional[list[str]] = None  # ordered list of order_ids
+
+
+# ============================================================================
+# Extraction Schemas (for LLM-based document extraction)
+# ============================================================================
+
+
+class NormalizedBagType(str, Enum):
+    """Normalized bag type values from extraction."""
+
+    LARGE = "large"
+    MEDIUM = "medium"
+    SMALL = "small"
+    UNKNOWN = "unknown"
+
+
+class ExtractedClient(BaseModel):
+    """Schema for client information extracted from receipts."""
+
+    business_name: Optional[str] = None
+    tax_id: Optional[str] = None
+    delivery_address: Optional[str] = None
+
+
+class ExtractedDocument(BaseModel):
+    """Schema for document metadata extracted from receipts."""
+
+    issue_date: Optional[date] = None
+    document_number: Optional[str] = None
+
+    @field_validator("issue_date", mode="before")
+    @classmethod
+    def parse_date(cls, v):
+        """Parse date from string if needed."""
+        if v is None:
+            return None
+        if isinstance(v, date):
+            return v
+        if isinstance(v, str):
+            try:
+                return datetime.strptime(v, "%Y-%m-%d").date()
+            except ValueError:
+                return None
+        return None
+
+
+class ExtractedItem(BaseModel):
+    """Schema for order item extracted from receipts."""
+
+    bag_type_raw: str
+    bag_type_normalized: NormalizedBagType = NormalizedBagType.UNKNOWN
+    quantity_packs: Optional[int] = None
+
+
+class ExtractedTotals(BaseModel):
+    """Schema for totals extracted from receipts."""
+
+    total_amount: Optional[float] = None
+    total_packs: Optional[int] = None
+
+
+class ExtractedReceipt(BaseModel):
+    """Full extraction result from a receipt document."""
+
+    extraction_confidence: float = Field(..., ge=0.0, le=1.0)
+    client: ExtractedClient
+    document: ExtractedDocument
+    items: list[ExtractedItem] = Field(default_factory=list)
+    totals: ExtractedTotals = Field(default_factory=ExtractedTotals)
+    extraction_notes: Optional[str] = None
+    requires_review: bool = False
+
+    @field_validator("requires_review", mode="after")
+    @classmethod
+    def check_requires_review(cls, v, info):
+        """Automatically set requires_review based on data quality."""
+        data = info.data
+        if data.get("extraction_confidence", 1.0) < 0.7:
+            return True
+        client = data.get("client")
+        if client:
+            if client.business_name is None or client.delivery_address is None:
+                return True
+        items = data.get("items", [])
+        for item in items:
+            if item.bag_type_normalized == NormalizedBagType.UNKNOWN:
+                return True
+            if item.quantity_packs is None:
+                return True
+        return v
+
+
+# ============================================================================
+# Geocoding Result Schema
+# ============================================================================
+
+
+class GeocodingResult(BaseModel):
+    """Result from geocoding an address."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    address_hash: str
+    raw_address: str
+    latitude: Optional[float] = Field(default=None, ge=-90, le=90)
+    longitude: Optional[float] = Field(default=None, ge=-180, le=180)
+    locality: Optional[str] = None
+    zone_id: Optional[str] = None
+    confidence: GeocodingConfidence = GeocodingConfidence.LOW
+    success: bool = False
+
+
+# ============================================================================
+# Processing Result Schema
+# ============================================================================
+
+
+class ProcessingResult(BaseModel):
+    """Result from processing a single receipt."""
+
+    receipt_path: str
+    success: bool
+    client_id: Optional[str] = None
+    client_is_new: bool = False
+    order_id: Optional[str] = None
+    order_is_duplicate: bool = False
+    extraction: Optional[ExtractedReceipt] = None
+    geocoding: Optional[GeocodingResult] = None
+    error_message: Optional[str] = None
+    processing_time_seconds: float = 0.0

@@ -119,6 +119,7 @@ class OrderModel(Base):
     total_amount = Column(Float, nullable=False)
     payment_status = Column(String, default="pending")
     is_mandatory = Column(Boolean, default=False)
+    quantity_packs = Column(Float, nullable=False)
     total_pallets = Column(Float, nullable=False)
     priority_score = Column(Float, nullable=True)
     status = Column(String, default="pending")

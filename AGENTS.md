@@ -69,7 +69,7 @@ output/ # Generated dispatches and maps
 
 | Term | Description |
 |------|-------------|
-| **Receipt** | Sales document (DOCX/Excel) with variable formats per vendor |
+| **Receipt** | Sales document (DOCX/Excel/PDF) with variable formats per vendor |
 | **Order** | Extracted and validated data from a receipt |
 | **Dispatch** | Subset of orders selected for a single truck trip (max 8 pallets) |
 | **Zone** | Geographic area (CABA, NORTH_ZONE, SOUTH_ZONE, WEST_ZONE) |
