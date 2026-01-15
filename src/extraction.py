@@ -245,7 +245,7 @@ def extract_from_pdf(pdf_path: Path) -> ExtractedReceipt:
     uploaded_file = gemini_client.files.upload(file=upload_path)
 
     try:
-        # Generate response using the new SDK API
+        # Generate response using the SDK API
         response = gemini_client.models.generate_content(
             model="gemini-2.5-flash",
             contents=[EXTRACTION_PROMPT, uploaded_file],
@@ -256,7 +256,7 @@ def extract_from_pdf(pdf_path: Path) -> ExtractedReceipt:
         data = _parse_json_response(response_text)
 
         # Validate with Pydantic
-        client = ExtractedClient(**data.get("client", {}))  # ← Ahora no hay conflicto
+        client = ExtractedClient(**data.get("client", {}))
         document = ExtractedDocument(**data.get("document", {}))
 
         items = []
