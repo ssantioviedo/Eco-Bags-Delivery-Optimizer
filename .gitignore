@@ -79,6 +79,9 @@ venv.bak/
 .DS_Store
 Thumbs.db
 
+# Project folders
+prompts/
+
 # Keep directory structure
 !data/processed/.gitkeep
 !data/raw/.gitkeep

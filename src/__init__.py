@@ -3,12 +3,10 @@
 This package provides modules for delivery optimization including:
 - schemas: Pydantic models for data validation
 - database: SQLAlchemy models and database utilities
-- extraction: LLM-based document parsing
-- scoring: Priority calculation
-- optimizer: Dispatch generation (knapsack)
-- routing: TSP for route optimization
+- extraction: LLM-based receipt parsing (PDF → structured data)
 - geo: Geocoding and distance utilities
-- pipeline: End-to-end orchestration
+
+Planned modules (not yet implemented in src/): scoring, optimizer, routing, pipeline.
 """
 
 from .database import (
