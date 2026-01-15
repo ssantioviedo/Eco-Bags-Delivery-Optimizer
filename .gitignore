@@ -60,9 +60,6 @@ ipython_config.py
 # pyenv
 .python-version
 
-# Poetry
-poetry.lock
-
 # Environment
 .env
 .venv
@@ -81,11 +78,6 @@ venv.bak/
 # OS
 .DS_Store
 Thumbs.db
-
-# Project specific
-data/processed/*.db
-output/dispatches/*.json
-output/maps/*.html
 
 # Keep directory structure
 !data/processed/.gitkeep

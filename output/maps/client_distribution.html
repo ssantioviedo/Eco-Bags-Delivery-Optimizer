@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_0513430ae48c3e197cface8f8169eb78 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style="position: fixed; bottom: 50px; left: 50px; z-index: 1000; 
+            background-color: white; padding: 10px; border-radius: 5px;
+            border: 2px solid grey; font-size: 12px;">
+    <b>Zones</b><br>
+    <i style="background: #FF6B6B; width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></i> CABA<br>
+    <i style="background: #4ECDC4; width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></i> North Zone<br>
+    <i style="background: #45B7D1; width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></i> South Zone<br>
+    <i style="background: #96CEB4; width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></i> West Zone<br>
+    <br><b>Depot</b><br>
+    <i class="fa fa-industry" style="color: black;"></i> Factory
+</div>
+    
+            <div class="folium-map" id="map_0513430ae48c3e197cface8f8169eb78" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_0513430ae48c3e197cface8f8169eb78 = L.map(
+                "map_0513430ae48c3e197cface8f8169eb78",
+                {
+                    center: [-34.732296882352415, -58.295903665460635],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_03839c9e50aa337fab5557dc5b91b322 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_03839c9e50aa337fab5557dc5b91b322.addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+            var marker_5718b26588f578a1322f4c82b85523ed = L.marker(
+                [-34.732296882352415, -58.295903665460635],
+                {
+}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+            var icon_d3ca06f9ec241a9c25aa7fc2f3024101 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "industry",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7fe207449d2753d81243283f3053cc3a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c222a23eed312bc17aedbfbdfaf6adb6 = $(`<div id="html_c222a23eed312bc17aedbfbdfaf6adb6" style="width: 100.0%; height: 100.0%;"><b>Eco-Bags Factory</b><br>Depot Location</div>`)[0];
+                popup_7fe207449d2753d81243283f3053cc3a.setContent(html_c222a23eed312bc17aedbfbdfaf6adb6);
+            
+        
+
+        marker_5718b26588f578a1322f4c82b85523ed.bindPopup(popup_7fe207449d2753d81243283f3053cc3a)
+        ;
+
+        
+    
+    
+            marker_5718b26588f578a1322f4c82b85523ed.bindTooltip(
+                `<div>
+                     Factory Depot
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5718b26588f578a1322f4c82b85523ed.setIcon(icon_d3ca06f9ec241a9c25aa7fc2f3024101);
+            
+    
+            var circle_marker_1a2551e1b54d212847eda55baf87f8fa = L.circleMarker(
+                [-34.42605039879722, -58.73165698924618],
+                {"bubblingMouseEvents": true, "color": "#4ECDC4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4ECDC4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_e22f44ec87ac12f9ce30a3df89e2d043 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_551a4a2870974dc087a51ce63a93fd84 = $(`<div id="html_551a4a2870974dc087a51ce63a93fd84" style="width: 100.0%; height: 100.0%;">     <b>Distribuidora La Victoria</b><br>     Zone: NORTH_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_e22f44ec87ac12f9ce30a3df89e2d043.setContent(html_551a4a2870974dc087a51ce63a93fd84);
+            
+        
+
+        circle_marker_1a2551e1b54d212847eda55baf87f8fa.bindPopup(popup_e22f44ec87ac12f9ce30a3df89e2d043)
+        ;
+
+        
+    
+    
+            circle_marker_1a2551e1b54d212847eda55baf87f8fa.bindTooltip(
+                `<div>
+                     Distribuidora La Victoria
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_57295db28753a2d5757d3a37bbadcbd6 = L.circleMarker(
+                [-34.70525210643889, -58.410911835977004],
+                {"bubblingMouseEvents": true, "color": "#45B7D1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#45B7D1", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_5b3e682c73992b7450c98ba544b90c52 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_d59b127d6c2e6b239bb65736911de403 = $(`<div id="html_d59b127d6c2e6b239bb65736911de403" style="width: 100.0%; height: 100.0%;">     <b>Almacen El Buen Precio</b><br>     Zone: SOUTH_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_5b3e682c73992b7450c98ba544b90c52.setContent(html_d59b127d6c2e6b239bb65736911de403);
+            
+        
+
+        circle_marker_57295db28753a2d5757d3a37bbadcbd6.bindPopup(popup_5b3e682c73992b7450c98ba544b90c52)
+        ;
+
+        
+    
+    
+            circle_marker_57295db28753a2d5757d3a37bbadcbd6.bindTooltip(
+                `<div>
+                     Almacen El Buen Precio
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fa15e2252ad2af74d1637292843f7d8f = L.circleMarker(
+                [-34.65302329652791, -58.784278036179906],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_3219beaf88523482b3eeff3d4d30c507 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_b0c89aaf2c3d65386569830535cb3b73 = $(`<div id="html_b0c89aaf2c3d65386569830535cb3b73" style="width: 100.0%; height: 100.0%;">     <b>Fiambreria La Esquina</b><br>     Zone: WEST_ZONE<br>     Star Client: Yes<br>     New Client: No     </div>`)[0];
+                popup_3219beaf88523482b3eeff3d4d30c507.setContent(html_b0c89aaf2c3d65386569830535cb3b73);
+            
+        
+
+        circle_marker_fa15e2252ad2af74d1637292843f7d8f.bindPopup(popup_3219beaf88523482b3eeff3d4d30c507)
+        ;
+
+        
+    
+    
+            circle_marker_fa15e2252ad2af74d1637292843f7d8f.bindTooltip(
+                `<div>
+                     Fiambreria La Esquina
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_308748c4dc906663b14352452a86a1e6 = L.circleMarker(
+                [-34.60219073680951, -58.56389892575228],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_3f00bbaa78dcb6abf31f75e576611b5e = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_40572d66003bf00120cc264f7c615345 = $(`<div id="html_40572d66003bf00120cc264f7c615345" style="width: 100.0%; height: 100.0%;">     <b>Autoservicio El Trebol</b><br>     Zone: WEST_ZONE<br>     Star Client: No<br>     New Client: Yes     </div>`)[0];
+                popup_3f00bbaa78dcb6abf31f75e576611b5e.setContent(html_40572d66003bf00120cc264f7c615345);
+            
+        
+
+        circle_marker_308748c4dc906663b14352452a86a1e6.bindPopup(popup_3f00bbaa78dcb6abf31f75e576611b5e)
+        ;
+
+        
+    
+    
+            circle_marker_308748c4dc906663b14352452a86a1e6.bindTooltip(
+                `<div>
+                     Autoservicio El Trebol
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_110b0f2a13d3c196ceb37ea5ec0619ae = L.circleMarker(
+                [-34.65676775019419, -58.66928012294253],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_178986d6cba0036268975d38ccb328d5 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_2481dc9620056c98969473dbaccdf2e6 = $(`<div id="html_2481dc9620056c98969473dbaccdf2e6" style="width: 100.0%; height: 100.0%;">     <b>Distribuidora del Sur</b><br>     Zone: WEST_ZONE<br>     Star Client: Yes<br>     New Client: No     </div>`)[0];
+                popup_178986d6cba0036268975d38ccb328d5.setContent(html_2481dc9620056c98969473dbaccdf2e6);
+            
+        
+
+        circle_marker_110b0f2a13d3c196ceb37ea5ec0619ae.bindPopup(popup_178986d6cba0036268975d38ccb328d5)
+        ;
+
+        
+    
+    
+            circle_marker_110b0f2a13d3c196ceb37ea5ec0619ae.bindTooltip(
+                `<div>
+                     Distribuidora del Sur
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8697e52d50a73b5b748165ae087423db = L.circleMarker(
+                [-34.59654004287378, -58.43624334182485],
+                {"bubblingMouseEvents": true, "color": "#FF6B6B", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF6B6B", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_39145a7b00635cbb370c01a758a51b49 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_82352b230ba229fdcb4fedc431d712be = $(`<div id="html_82352b230ba229fdcb4fedc431d712be" style="width: 100.0%; height: 100.0%;">     <b>Autoservicio Mi Barrio</b><br>     Zone: CABA<br>     Star Client: No<br>     New Client: Yes     </div>`)[0];
+                popup_39145a7b00635cbb370c01a758a51b49.setContent(html_82352b230ba229fdcb4fedc431d712be);
+            
+        
+
+        circle_marker_8697e52d50a73b5b748165ae087423db.bindPopup(popup_39145a7b00635cbb370c01a758a51b49)
+        ;
+
+        
+    
+    
+            circle_marker_8697e52d50a73b5b748165ae087423db.bindTooltip(
+                `<div>
+                     Autoservicio Mi Barrio
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_575d18c0b30092b8fadb6b1691dfa56d = L.circleMarker(
+                [-34.829299693891244, -58.39191227823004],
+                {"bubblingMouseEvents": true, "color": "#45B7D1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#45B7D1", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_a26a642ccdfbfe6ef8e109c96e49e7dc = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_36c6dc07257351a67ed8355ca3e6637e = $(`<div id="html_36c6dc07257351a67ed8355ca3e6637e" style="width: 100.0%; height: 100.0%;">     <b>Mayorista La Union</b><br>     Zone: SOUTH_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_a26a642ccdfbfe6ef8e109c96e49e7dc.setContent(html_36c6dc07257351a67ed8355ca3e6637e);
+            
+        
+
+        circle_marker_575d18c0b30092b8fadb6b1691dfa56d.bindPopup(popup_a26a642ccdfbfe6ef8e109c96e49e7dc)
+        ;
+
+        
+    
+    
+            circle_marker_575d18c0b30092b8fadb6b1691dfa56d.bindTooltip(
+                `<div>
+                     Mayorista La Union
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e96c7f046ab179be6350d2991cd48893 = L.circleMarker(
+                [-34.80200362681116, -58.38655301079684],
+                {"bubblingMouseEvents": true, "color": "#45B7D1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#45B7D1", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_ac53934fb568fd99daa09cb8e73989af = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_4d0de6e5dff95b565f3cc9de6781aad6 = $(`<div id="html_4d0de6e5dff95b565f3cc9de6781aad6" style="width: 100.0%; height: 100.0%;">     <b>Supermercado Los Amigos</b><br>     Zone: SOUTH_ZONE<br>     Star Client: No<br>     New Client: Yes     </div>`)[0];
+                popup_ac53934fb568fd99daa09cb8e73989af.setContent(html_4d0de6e5dff95b565f3cc9de6781aad6);
+            
+        
+
+        circle_marker_e96c7f046ab179be6350d2991cd48893.bindPopup(popup_ac53934fb568fd99daa09cb8e73989af)
+        ;
+
+        
+    
+    
+            circle_marker_e96c7f046ab179be6350d2991cd48893.bindTooltip(
+                `<div>
+                     Supermercado Los Amigos
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0d3c30d014cc28bc6b9b6795108e1af5 = L.circleMarker(
+                [-34.68180552088784, -58.3456173916246],
+                {"bubblingMouseEvents": true, "color": "#45B7D1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#45B7D1", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_c60ddc90d2011e5e7034d99c0d83a643 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_da45fb249f6e11c08fd927e813bace54 = $(`<div id="html_da45fb249f6e11c08fd927e813bace54" style="width: 100.0%; height: 100.0%;">     <b>Comercial Rivadavia</b><br>     Zone: SOUTH_ZONE<br>     Star Client: Yes<br>     New Client: No     </div>`)[0];
+                popup_c60ddc90d2011e5e7034d99c0d83a643.setContent(html_da45fb249f6e11c08fd927e813bace54);
+            
+        
+
+        circle_marker_0d3c30d014cc28bc6b9b6795108e1af5.bindPopup(popup_c60ddc90d2011e5e7034d99c0d83a643)
+        ;
+
+        
+    
+    
+            circle_marker_0d3c30d014cc28bc6b9b6795108e1af5.bindTooltip(
+                `<div>
+                     Comercial Rivadavia
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d707421d75bd73433fd50ff1de4270ec = L.circleMarker(
+                [-34.57052494629247, -58.49498940244819],
+                {"bubblingMouseEvents": true, "color": "#FF6B6B", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF6B6B", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_ba4d8f8e0762d6206638a78759c93cdf = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_0f2975d26f8e218b071cdc786594487a = $(`<div id="html_0f2975d26f8e218b071cdc786594487a" style="width: 100.0%; height: 100.0%;">     <b>Mayorista Santa Fe</b><br>     Zone: CABA<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_ba4d8f8e0762d6206638a78759c93cdf.setContent(html_0f2975d26f8e218b071cdc786594487a);
+            
+        
+
+        circle_marker_d707421d75bd73433fd50ff1de4270ec.bindPopup(popup_ba4d8f8e0762d6206638a78759c93cdf)
+        ;
+
+        
+    
+    
+            circle_marker_d707421d75bd73433fd50ff1de4270ec.bindTooltip(
+                `<div>
+                     Mayorista Santa Fe
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0ea2f31e1cbe8394e30359973614802c = L.circleMarker(
+                [-34.55048125264281, -58.46049089287442],
+                {"bubblingMouseEvents": true, "color": "#FF6B6B", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF6B6B", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_564d28ad2304e564943de5f09eb2feaf = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_069d7e48af95b327cc032863ad1d2ac2 = $(`<div id="html_069d7e48af95b327cc032863ad1d2ac2" style="width: 100.0%; height: 100.0%;">     <b>Comercial San Martin</b><br>     Zone: CABA<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_564d28ad2304e564943de5f09eb2feaf.setContent(html_069d7e48af95b327cc032863ad1d2ac2);
+            
+        
+
+        circle_marker_0ea2f31e1cbe8394e30359973614802c.bindPopup(popup_564d28ad2304e564943de5f09eb2feaf)
+        ;
+
+        
+    
+    
+            circle_marker_0ea2f31e1cbe8394e30359973614802c.bindTooltip(
+                `<div>
+                     Comercial San Martin
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5e18fd2fb2b60b5d442dceba35b22621 = L.circleMarker(
+                [-34.66082273311486, -58.66818228362154],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_601dc2a0de60f3bc7b5f1bc635efc608 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_930c384bce2ba533d7f790f1bab956e6 = $(`<div id="html_930c384bce2ba533d7f790f1bab956e6" style="width: 100.0%; height: 100.0%;">     <b>Autoservicio La Plaza</b><br>     Zone: WEST_ZONE<br>     Star Client: Yes<br>     New Client: No     </div>`)[0];
+                popup_601dc2a0de60f3bc7b5f1bc635efc608.setContent(html_930c384bce2ba533d7f790f1bab956e6);
+            
+        
+
+        circle_marker_5e18fd2fb2b60b5d442dceba35b22621.bindPopup(popup_601dc2a0de60f3bc7b5f1bc635efc608)
+        ;
+
+        
+    
+    
+            circle_marker_5e18fd2fb2b60b5d442dceba35b22621.bindTooltip(
+                `<div>
+                     Autoservicio La Plaza
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_be27f3b92a2ea63c9c295e517542ec3f = L.circleMarker(
+                [-34.3489829527708, -58.793997442739574],
+                {"bubblingMouseEvents": true, "color": "#4ECDC4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4ECDC4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_74c04897b7edfa10bb0c2ce68f9b8a0e = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_00a8a0216dd3b6cf0e05080ec7378718 = $(`<div id="html_00a8a0216dd3b6cf0e05080ec7378718" style="width: 100.0%; height: 100.0%;">     <b>Fiambreria Del Centro</b><br>     Zone: NORTH_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_74c04897b7edfa10bb0c2ce68f9b8a0e.setContent(html_00a8a0216dd3b6cf0e05080ec7378718);
+            
+        
+
+        circle_marker_be27f3b92a2ea63c9c295e517542ec3f.bindPopup(popup_74c04897b7edfa10bb0c2ce68f9b8a0e)
+        ;
+
+        
+    
+    
+            circle_marker_be27f3b92a2ea63c9c295e517542ec3f.bindTooltip(
+                `<div>
+                     Fiambreria Del Centro
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2ef947da654d0217be18e966b86fd46e = L.circleMarker(
+                [-34.5843985094406, -58.45777592131055],
+                {"bubblingMouseEvents": true, "color": "#FF6B6B", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF6B6B", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_b3e0ef4158e0528846017a0ee5038f76 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_b6b3f0055891b60ad396ac25a1b4d8a3 = $(`<div id="html_b6b3f0055891b60ad396ac25a1b4d8a3" style="width: 100.0%; height: 100.0%;">     <b>Mercado Central Norte</b><br>     Zone: CABA<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_b3e0ef4158e0528846017a0ee5038f76.setContent(html_b6b3f0055891b60ad396ac25a1b4d8a3);
+            
+        
+
+        circle_marker_2ef947da654d0217be18e966b86fd46e.bindPopup(popup_b3e0ef4158e0528846017a0ee5038f76)
+        ;
+
+        
+    
+    
+            circle_marker_2ef947da654d0217be18e966b86fd46e.bindTooltip(
+                `<div>
+                     Mercado Central Norte
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e825804d907dcc11fa8b81070614a44b = L.circleMarker(
+                [-34.580779383412526, -58.58523562773299],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_2697fe27b59d746ac25a68826fa875c7 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_9b882a612a376f8f831135ccbf832824 = $(`<div id="html_9b882a612a376f8f831135ccbf832824" style="width: 100.0%; height: 100.0%;">     <b>Comercio La Estrella</b><br>     Zone: WEST_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_2697fe27b59d746ac25a68826fa875c7.setContent(html_9b882a612a376f8f831135ccbf832824);
+            
+        
+
+        circle_marker_e825804d907dcc11fa8b81070614a44b.bindPopup(popup_2697fe27b59d746ac25a68826fa875c7)
+        ;
+
+        
+    
+    
+            circle_marker_e825804d907dcc11fa8b81070614a44b.bindTooltip(
+                `<div>
+                     Comercio La Estrella
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_87242cf922fb7da5505308581e0e59d4 = L.circleMarker(
+                [-34.69272876024532, -58.52560465569525],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_d8fbf3e8b3d9e7f8397f7a9f62052bd2 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_165d1d99f8808796905864a6fcda6c9e = $(`<div id="html_165d1d99f8808796905864a6fcda6c9e" style="width: 100.0%; height: 100.0%;">     <b>Distribuidora San Jorge</b><br>     Zone: WEST_ZONE<br>     Star Client: No<br>     New Client: Yes     </div>`)[0];
+                popup_d8fbf3e8b3d9e7f8397f7a9f62052bd2.setContent(html_165d1d99f8808796905864a6fcda6c9e);
+            
+        
+
+        circle_marker_87242cf922fb7da5505308581e0e59d4.bindPopup(popup_d8fbf3e8b3d9e7f8397f7a9f62052bd2)
+        ;
+
+        
+    
+    
+            circle_marker_87242cf922fb7da5505308581e0e59d4.bindTooltip(
+                `<div>
+                     Distribuidora San Jorge
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fc60033b2029f4b6ac77224df26c5c6e = L.circleMarker(
+                [-34.645764682649045, -58.593697842895324],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_dfe87eff38991292d574b64b1075bcbf = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_6c6d1b4a89226053ab07f748666c3d81 = $(`<div id="html_6c6d1b4a89226053ab07f748666c3d81" style="width: 100.0%; height: 100.0%;">     <b>Supermercado Norte</b><br>     Zone: WEST_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_dfe87eff38991292d574b64b1075bcbf.setContent(html_6c6d1b4a89226053ab07f748666c3d81);
+            
+        
+
+        circle_marker_fc60033b2029f4b6ac77224df26c5c6e.bindPopup(popup_dfe87eff38991292d574b64b1075bcbf)
+        ;
+
+        
+    
+    
+            circle_marker_fc60033b2029f4b6ac77224df26c5c6e.bindTooltip(
+                `<div>
+                     Supermercado Norte
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0fdc5a1ccd40c223ba328f6f1581addc = L.circleMarker(
+                [-34.431340010474436, -58.57873040780987],
+                {"bubblingMouseEvents": true, "color": "#4ECDC4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4ECDC4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_4537bb78debbdfdc8d5ab1c048caa82e = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_6617dfaddd8b0bbedce475424a52914a = $(`<div id="html_6617dfaddd8b0bbedce475424a52914a" style="width: 100.0%; height: 100.0%;">     <b>Mayorista Don Juan</b><br>     Zone: NORTH_ZONE<br>     Star Client: No<br>     New Client: Yes     </div>`)[0];
+                popup_4537bb78debbdfdc8d5ab1c048caa82e.setContent(html_6617dfaddd8b0bbedce475424a52914a);
+            
+        
+
+        circle_marker_0fdc5a1ccd40c223ba328f6f1581addc.bindPopup(popup_4537bb78debbdfdc8d5ab1c048caa82e)
+        ;
+
+        
+    
+    
+            circle_marker_0fdc5a1ccd40c223ba328f6f1581addc.bindTooltip(
+                `<div>
+                     Mayorista Don Juan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f522f477496ea3f61e00907c48fec516 = L.circleMarker(
+                [-34.61715123450831, -58.3811520577621],
+                {"bubblingMouseEvents": true, "color": "#FF6B6B", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF6B6B", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_abdea9a8f5b1193eadc086dbfbb7bf72 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_5faf8d304617780b9bee5320ee94aa78 = $(`<div id="html_5faf8d304617780b9bee5320ee94aa78" style="width: 100.0%; height: 100.0%;">     <b>Almacen El Progreso</b><br>     Zone: CABA<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_abdea9a8f5b1193eadc086dbfbb7bf72.setContent(html_5faf8d304617780b9bee5320ee94aa78);
+            
+        
+
+        circle_marker_f522f477496ea3f61e00907c48fec516.bindPopup(popup_abdea9a8f5b1193eadc086dbfbb7bf72)
+        ;
+
+        
+    
+    
+            circle_marker_f522f477496ea3f61e00907c48fec516.bindTooltip(
+                `<div>
+                     Almacen El Progreso
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_45edb1be886f826dab13fe9c9b691198 = L.circleMarker(
+                [-34.58926150664434, -58.39440842891707],
+                {"bubblingMouseEvents": true, "color": "#FF6B6B", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF6B6B", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_10eb0705260475a4f0d05171a372597e = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_c53f52227a0f2d0734cc7dabdf70393e = $(`<div id="html_c53f52227a0f2d0734cc7dabdf70393e" style="width: 100.0%; height: 100.0%;">     <b>Comercial El Puente</b><br>     Zone: CABA<br>     Star Client: No<br>     New Client: Yes     </div>`)[0];
+                popup_10eb0705260475a4f0d05171a372597e.setContent(html_c53f52227a0f2d0734cc7dabdf70393e);
+            
+        
+
+        circle_marker_45edb1be886f826dab13fe9c9b691198.bindPopup(popup_10eb0705260475a4f0d05171a372597e)
+        ;
+
+        
+    
+    
+            circle_marker_45edb1be886f826dab13fe9c9b691198.bindTooltip(
+                `<div>
+                     Comercial El Puente
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_26f8ffcc0344885eca0b376520e337c3 = L.circleMarker(
+                [-34.64671316114805, -58.42281225001882],
+                {"bubblingMouseEvents": true, "color": "#FF6B6B", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF6B6B", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_9b79f72045e1fe7416bd72b3e284029f = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_cc2363b3cb6ded3103acc6902693d95d = $(`<div id="html_cc2363b3cb6ded3103acc6902693d95d" style="width: 100.0%; height: 100.0%;">     <b>Almacen Mi Tierra</b><br>     Zone: CABA<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_9b79f72045e1fe7416bd72b3e284029f.setContent(html_cc2363b3cb6ded3103acc6902693d95d);
+            
+        
+
+        circle_marker_26f8ffcc0344885eca0b376520e337c3.bindPopup(popup_9b79f72045e1fe7416bd72b3e284029f)
+        ;
+
+        
+    
+    
+            circle_marker_26f8ffcc0344885eca0b376520e337c3.bindTooltip(
+                `<div>
+                     Almacen Mi Tierra
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0d49859846d7ed4d39b8edd3a56fccee = L.circleMarker(
+                [-34.68799320255447, -58.555156727976005],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_b14f26627ccdc9d22aab6a8ac6b397f9 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_36ad8c2338c126cd9922a4c5be046fcb = $(`<div id="html_36ad8c2338c126cd9922a4c5be046fcb" style="width: 100.0%; height: 100.0%;">     <b>Comercio Don Carlos</b><br>     Zone: WEST_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_b14f26627ccdc9d22aab6a8ac6b397f9.setContent(html_36ad8c2338c126cd9922a4c5be046fcb);
+            
+        
+
+        circle_marker_0d49859846d7ed4d39b8edd3a56fccee.bindPopup(popup_b14f26627ccdc9d22aab6a8ac6b397f9)
+        ;
+
+        
+    
+    
+            circle_marker_0d49859846d7ed4d39b8edd3a56fccee.bindTooltip(
+                `<div>
+                     Comercio Don Carlos
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d51d7c57b7bbbe8e677218b9f487e7ae = L.circleMarker(
+                [-34.59587766044731, -58.640867462292356],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_4e3d60acba6e24d75344f5e883abbb78 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_93ddeed5a409a5a02b182837a97eb372 = $(`<div id="html_93ddeed5a409a5a02b182837a97eb372" style="width: 100.0%; height: 100.0%;">     <b>Distribuidora Los Andes</b><br>     Zone: WEST_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_4e3d60acba6e24d75344f5e883abbb78.setContent(html_93ddeed5a409a5a02b182837a97eb372);
+            
+        
+
+        circle_marker_d51d7c57b7bbbe8e677218b9f487e7ae.bindPopup(popup_4e3d60acba6e24d75344f5e883abbb78)
+        ;
+
+        
+    
+    
+            circle_marker_d51d7c57b7bbbe8e677218b9f487e7ae.bindTooltip(
+                `<div>
+                     Distribuidora Los Andes
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0ad1f7e194bc1d4824cfc429ee8565a5 = L.circleMarker(
+                [-34.394311084401586, -58.741433152874144],
+                {"bubblingMouseEvents": true, "color": "#4ECDC4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4ECDC4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_2b3b15016a14d151abd9f057146dc105 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_20f1094445d9be9769f2e3a133ccbffe = $(`<div id="html_20f1094445d9be9769f2e3a133ccbffe" style="width: 100.0%; height: 100.0%;">     <b>Mayorista El Gaucho</b><br>     Zone: NORTH_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_2b3b15016a14d151abd9f057146dc105.setContent(html_20f1094445d9be9769f2e3a133ccbffe);
+            
+        
+
+        circle_marker_0ad1f7e194bc1d4824cfc429ee8565a5.bindPopup(popup_2b3b15016a14d151abd9f057146dc105)
+        ;
+
+        
+    
+    
+            circle_marker_0ad1f7e194bc1d4824cfc429ee8565a5.bindTooltip(
+                `<div>
+                     Mayorista El Gaucho
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_488958569d9a2761772ab723334ac04d = L.circleMarker(
+                [-34.42753422365753, -58.581482512181125],
+                {"bubblingMouseEvents": true, "color": "#4ECDC4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4ECDC4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_8b6b4c9ebd31cd5b396c37912a6e7517 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_d28111d828e9a2e49743456b43906bb5 = $(`<div id="html_d28111d828e9a2e49743456b43906bb5" style="width: 100.0%; height: 100.0%;">     <b>Mercadito El Vecino</b><br>     Zone: NORTH_ZONE<br>     Star Client: No<br>     New Client: Yes     </div>`)[0];
+                popup_8b6b4c9ebd31cd5b396c37912a6e7517.setContent(html_d28111d828e9a2e49743456b43906bb5);
+            
+        
+
+        circle_marker_488958569d9a2761772ab723334ac04d.bindPopup(popup_8b6b4c9ebd31cd5b396c37912a6e7517)
+        ;
+
+        
+    
+    
+            circle_marker_488958569d9a2761772ab723334ac04d.bindTooltip(
+                `<div>
+                     Mercadito El Vecino
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fa96ce979f7d6dcbacc1515c52e1bbcc = L.circleMarker(
+                [-34.65404090319872, -58.6425497706781],
+                {"bubblingMouseEvents": true, "color": "#96CEB4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96CEB4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_e702a09a3977e65a2c6a2e37016b3d3b = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_d244c95e80c4ecf9b2fc570b7efc408a = $(`<div id="html_d244c95e80c4ecf9b2fc570b7efc408a" style="width: 100.0%; height: 100.0%;">     <b>Distribuidora Pampa</b><br>     Zone: WEST_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_e702a09a3977e65a2c6a2e37016b3d3b.setContent(html_d244c95e80c4ecf9b2fc570b7efc408a);
+            
+        
+
+        circle_marker_fa96ce979f7d6dcbacc1515c52e1bbcc.bindPopup(popup_e702a09a3977e65a2c6a2e37016b3d3b)
+        ;
+
+        
+    
+    
+            circle_marker_fa96ce979f7d6dcbacc1515c52e1bbcc.bindTooltip(
+                `<div>
+                     Distribuidora Pampa
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8a4aac9f56ce1bfb741daeb2d7141f6b = L.circleMarker(
+                [-34.71901237389321, -58.25722306558015],
+                {"bubblingMouseEvents": true, "color": "#45B7D1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#45B7D1", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_0094a912ee8f214c3c64617a5cb47764 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_86d5ea725fa6f32c98b4a04036f0b447 = $(`<div id="html_86d5ea725fa6f32c98b4a04036f0b447" style="width: 100.0%; height: 100.0%;">     <b>Almacen y Dietética Vita</b><br>     Zone: SOUTH_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_0094a912ee8f214c3c64617a5cb47764.setContent(html_86d5ea725fa6f32c98b4a04036f0b447);
+            
+        
+
+        circle_marker_8a4aac9f56ce1bfb741daeb2d7141f6b.bindPopup(popup_0094a912ee8f214c3c64617a5cb47764)
+        ;
+
+        
+    
+    
+            circle_marker_8a4aac9f56ce1bfb741daeb2d7141f6b.bindTooltip(
+                `<div>
+                     Almacen y Dietética Vita
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d0a59aeba39834c809d390c8d4037b41 = L.circleMarker(
+                [-34.63230878318326, -58.382275393040345],
+                {"bubblingMouseEvents": true, "color": "#FF6B6B", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF6B6B", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_35e77e86f21ad5d0fa763be35df1e706 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_6dd25478e02de42d3775f6b195f8de7e = $(`<div id="html_6dd25478e02de42d3775f6b195f8de7e" style="width: 100.0%; height: 100.0%;">     <b>Supermercado Don Pedro</b><br>     Zone: CABA<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_35e77e86f21ad5d0fa763be35df1e706.setContent(html_6dd25478e02de42d3775f6b195f8de7e);
+            
+        
+
+        circle_marker_d0a59aeba39834c809d390c8d4037b41.bindPopup(popup_35e77e86f21ad5d0fa763be35df1e706)
+        ;
+
+        
+    
+    
+            circle_marker_d0a59aeba39834c809d390c8d4037b41.bindTooltip(
+                `<div>
+                     Supermercado Don Pedro
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2c63e3896d7210671241bc95588f2c17 = L.circleMarker(
+                [-34.342223330094406, -58.795748828185246],
+                {"bubblingMouseEvents": true, "color": "#4ECDC4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4ECDC4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_4bf4d2982a5180a4a0cb9c07dc278029 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_5a0d3ba2e763fece38440f9c3d6e7dda = $(`<div id="html_5a0d3ba2e763fece38440f9c3d6e7dda" style="width: 100.0%; height: 100.0%;">     <b>Mercado Buenos Aires</b><br>     Zone: NORTH_ZONE<br>     Star Client: Yes<br>     New Client: Yes     </div>`)[0];
+                popup_4bf4d2982a5180a4a0cb9c07dc278029.setContent(html_5a0d3ba2e763fece38440f9c3d6e7dda);
+            
+        
+
+        circle_marker_2c63e3896d7210671241bc95588f2c17.bindPopup(popup_4bf4d2982a5180a4a0cb9c07dc278029)
+        ;
+
+        
+    
+    
+            circle_marker_2c63e3896d7210671241bc95588f2c17.bindTooltip(
+                `<div>
+                     Mercado Buenos Aires
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_227ef272992eac2cb766f2ac91132319 = L.circleMarker(
+                [-34.70420581771371, -58.39163449671073],
+                {"bubblingMouseEvents": true, "color": "#45B7D1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#45B7D1", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+        var popup_4dd4e7581042e175c34bcdd3cd7c11e2 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_93b6cb64bc083073e9a8e13d12e9375a = $(`<div id="html_93b6cb64bc083073e9a8e13d12e9375a" style="width: 100.0%; height: 100.0%;">     <b>Mayorista Del Oeste</b><br>     Zone: SOUTH_ZONE<br>     Star Client: No<br>     New Client: No     </div>`)[0];
+                popup_4dd4e7581042e175c34bcdd3cd7c11e2.setContent(html_93b6cb64bc083073e9a8e13d12e9375a);
+            
+        
+
+        circle_marker_227ef272992eac2cb766f2ac91132319.bindPopup(popup_4dd4e7581042e175c34bcdd3cd7c11e2)
+        ;
+
+        
+    
+    
+            circle_marker_227ef272992eac2cb766f2ac91132319.bindTooltip(
+                `<div>
+                     Mayorista Del Oeste
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            tile_layer_03839c9e50aa337fab5557dc5b91b322.addTo(map_0513430ae48c3e197cface8f8169eb78);
+        
+    
+                marker_5718b26588f578a1322f4c82b85523ed.setIcon(icon_d3ca06f9ec241a9c25aa7fc2f3024101);
+            
+</script>
+</html>
