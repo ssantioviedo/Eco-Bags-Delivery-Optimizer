@@ -1,0 +1,25 @@
+{
+  "weights": {
+    "urgency": 0.40,
+    "payment": 0.25,
+    "client": 0.20,
+    "age": 0.15
+  },
+  "payment_status_multipliers": {
+    "paid": 1.0,
+    "partial": 0.6,
+    "pending": 0.3
+  },
+  "client_scores": {
+    "star_client": 100,
+    "new_client": 80,
+    "frequent": 60,
+    "regular": 40,
+    "occasional": 20
+  },
+  "client_order_thresholds": {
+    "frequent": 5,
+    "regular": 2
+  },
+  "mandatory_score": 999999
+}

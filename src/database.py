@@ -409,6 +409,104 @@ class DatabaseManager:
             session.refresh(item)
         return item
 
+    def update_order_priority(self, order_id: str, priority_score: float) -> None:
+        """Update priority score for a single order.
+
+        Args:
+            order_id: The order ID to update.
+            priority_score: The new priority score.
+        """
+        with self.get_session() as session:
+            order = session.query(OrderModel).filter(OrderModel.order_id == order_id).first()
+            if order:
+                order.priority_score = priority_score
+                session.commit()
+
+    def bulk_update_priorities(self, scores: list[dict]) -> int:
+        """Bulk update priority scores for multiple orders.
+
+        Args:
+            scores: List of {"order_id": str, "priority_score": float} dictionaries.
+
+        Returns:
+            Number of orders updated.
+        """
+        updated_count = 0
+        with self.get_session() as session:
+            for score_data in scores:
+                order = (
+                    session.query(OrderModel)
+                    .filter(OrderModel.order_id == score_data["order_id"])
+                    .first()
+                )
+                if order:
+                    order.priority_score = score_data["priority_score"]
+                    updated_count += 1
+            session.commit()
+        return updated_count
+
+    def get_orders_with_clients(self) -> list[tuple]:
+        """Get all orders joined with their client data.
+
+        Returns:
+            List of tuples (OrderModel, ClientModel) for each order.
+        """
+        with self.get_session() as session:
+            results = (
+                session.query(OrderModel, ClientModel)
+                .join(ClientModel, OrderModel.client_id == ClientModel.client_id)
+                .all()
+            )
+            return results
+
+    def get_pending_orders_with_clients(self) -> list[tuple]:
+        """Get all pending orders joined with their client data.
+
+        Returns:
+            List of tuples (OrderModel, ClientModel) for each pending order.
+        """
+        with self.get_session() as session:
+            results = (
+                session.query(OrderModel, ClientModel)
+                .join(ClientModel, OrderModel.client_id == ClientModel.client_id)
+                .filter(OrderModel.status == "pending")
+                .all()
+            )
+            return results
+
+    def count_client_orders(self, client_id: str) -> int:
+        """Count total orders for a client (for frequency calculation).
+
+        Args:
+            client_id: The client ID to count orders for.
+
+        Returns:
+            Number of orders for this client.
+        """
+        with self.get_session() as session:
+            count = (
+                session.query(OrderModel)
+                .filter(OrderModel.client_id == client_id)
+                .count()
+            )
+            return count
+
+    def get_client_order_counts(self) -> dict[str, int]:
+        """Get order counts for all clients.
+
+        Returns:
+            Dictionary mapping client_id to order count.
+        """
+        with self.get_session() as session:
+            from sqlalchemy import func
+
+            results = (
+                session.query(OrderModel.client_id, func.count(OrderModel.order_id))
+                .group_by(OrderModel.client_id)
+                .all()
+            )
+            return {client_id: count for client_id, count in results}
+
 
 def get_database_manager(db_path: Optional[str | Path] = None) -> DatabaseManager:
     """Get a DatabaseManager instance with the default or specified path.
