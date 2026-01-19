@@ -1,0 +1,46 @@
+{
+  "generated_at": "2026-01-19T00:02:10.409135",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "candidate_id": "DISP-20260119-GREEDY-BCCE",
+      "strategy": "greedy_zone_caba",
+      "generated_at": "2026-01-19T00:02:10.409149",
+      "orders": [
+        {
+          "order_id": "ORD-930E42E5",
+          "client_name": "Supermercado Don Pedro",
+          "pallets": 3.94,
+          "priority_score": 999999.0,
+          "zone_id": "CABA",
+          "is_mandatory": true
+        },
+        {
+          "order_id": "ORD-9D6187C8",
+          "client_name": "Supermercado Don Pedro",
+          "pallets": 4.19,
+          "priority_score": 999999.0,
+          "zone_id": "CABA",
+          "is_mandatory": true
+        }
+      ],
+      "summary": {
+        "total_pallets": 8.13,
+        "total_priority": 1999998.0,
+        "utilization_pct": 101.6,
+        "order_count": 2,
+        "zones": [
+          "CABA"
+        ],
+        "zone_breakdown": {
+          "CABA": 2
+        },
+        "is_single_zone": true,
+        "zone_dispersion_penalty": 1.0,
+        "adjusted_priority": 1999998.0,
+        "mandatory_included": true,
+        "mandatory_count": 2
+      }
+    }
+  ]
+}

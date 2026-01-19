@@ -1,0 +1,45 @@
+{
+  "capacity": {
+    "nominal": 8.0,
+    "min_acceptable": 7.0,
+    "max_acceptable": 8.5,
+    "hard_max": 9.0,
+    "min_for_zone_candidate": 4.0
+  },
+  "zone_penalties": {
+    "single_zone": 1.0,
+    "two_zones": 0.95,
+    "three_plus_zones": 0.85
+  },
+  "spillover": {
+    "remaining_capacity_threshold": 2.0,
+    "marginal_priority_threshold": 0.15
+  },
+  "multizone_exception_threshold": 0.30,
+  "dp_precision": 0.25,
+  "max_candidates": 10,
+  "ranking_weights": {
+    "priority": 0.5,
+    "utilization": 0.3,
+    "zone_coherence": 0.2
+  },
+  "zone_adjacency": {
+    "CABA": ["NORTH_ZONE", "WEST_ZONE", "SOUTH_ZONE"],
+    "NORTH_ZONE": ["CABA", "WEST_ZONE"],
+    "SOUTH_ZONE": ["CABA", "WEST_ZONE"],
+    "WEST_ZONE": ["CABA", "NORTH_ZONE", "SOUTH_ZONE"]
+  },
+  "strategies_enabled": [
+    "greedy_efficiency",
+    "greedy_priority",
+    "greedy_zone_caba",
+    "greedy_zone_north",
+    "greedy_zone_south",
+    "greedy_zone_west",
+    "greedy_zone_spillover",
+    "greedy_best_fit",
+    "dp_optimal",
+    "mandatory_first",
+    "greedy_mandatory_nearest"
+  ]
+}
