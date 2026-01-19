@@ -149,8 +149,8 @@ def calculate_payment_score(
     total_amount: float,
     payment_status: Optional[str],
     config: ScoringConfig,
-    p25_amount: float = 1000.0,
-    p75_amount: float = 5000.0,
+    p15_amount: float = 1000.0,
+    p85_amount: float = 5000.0,
 ) -> float:
     """Calculate payment score based on order amount and payment status.
     
@@ -164,26 +164,26 @@ def calculate_payment_score(
         total_amount: The order's total amount.
         payment_status: The order's payment status (paid, partial, pending).
         config: Scoring configuration.
-        p25_amount: 25th percentile amount (robust minimum).
-        p75_amount: 75th percentile amount (robust maximum).
+        p15_amount: 15th percentile amount (robust minimum).
+        p85_amount: 85th percentile amount (robust maximum).
 
     Returns:
         Payment score between 0 and 100.
     """
     # Calculate base score using interquartile range (0-100)
-    range_size = p75_amount - p25_amount
+    range_size = p85_amount - p15_amount
     
     if range_size == 0:
         base_score = 100.0
     else:
         # Clamp to percentile range but allow scores outside for extreme values
-        if total_amount <= p25_amount:
+        if total_amount <= p15_amount:
             base_score = 20.0  # Minimum score for low amounts
-        elif total_amount >= p75_amount:
+        elif total_amount >= p85_amount:
             base_score = 100.0  # Maximum score for high amounts
         else:
-            # Linear interpolation between 25th and 75th percentile
-            base_score = 20.0 + ((total_amount - p25_amount) / range_size) * 80.0
+            # Linear interpolation between 15th and 85th percentile
+            base_score = 20.0 + ((total_amount - p15_amount) / range_size) * 80.0
     
     # Get payment status multiplier
     if payment_status is None:
@@ -337,8 +337,8 @@ def calculate_priority_score(
         data_ranges: Dict with actual data ranges {
             'min_days_to_deadline': int,
             'max_days_to_deadline': int,
-            'p25_amount': float,
-            'p75_amount': float,
+            'p15_amount': float,
+            'p85_amount': float,
             'max_age_days': int
         }. If None, uses default values.
 
@@ -371,8 +371,8 @@ def calculate_priority_score(
         order.total_amount,
         order.payment_status,
         config,
-        p25_amount=data_ranges['p25_amount'],
-        p75_amount=data_ranges['p75_amount'],
+        p15_amount=data_ranges['p15_amount'],
+        p85_amount=data_ranges['p85_amount'],
     )
     
     client_score = calculate_client_score(client, historical_order_count, config)
@@ -445,8 +445,8 @@ def get_scoring_breakdown(
         order.total_amount,
         order.payment_status,
         config,
-        p25_amount=data_ranges['p25_amount'],
-        p75_amount=data_ranges['p75_amount'],
+        p15_amount=data_ranges['p15_amount'],
+        p85_amount=data_ranges['p85_amount'],
     )
     
     client_raw = calculate_client_score(client, historical_order_count, config)
@@ -527,8 +527,8 @@ def calculate_data_ranges(
         Dict with keys:
         - min_days_to_deadline: Minimum days to deadline (can be negative for overdue)
         - max_days_to_deadline: Maximum days to deadline (excludes overdue for scaling)
-        - p25_amount: 25th percentile order amount (robust minimum)
-        - p75_amount: 75th percentile order amount (robust maximum)
+        - p15_amount: 15th percentile order amount (robust minimum)
+        - p85_amount: 85th percentile order amount (robust maximum)
         - max_age_days: Maximum order age in days
     """
     if reference_date is None:
@@ -543,8 +543,8 @@ def calculate_data_ranges(
             return {
                 'min_days_to_deadline': -30,
                 'max_days_to_deadline': 30,
-                'p25_amount': 1000.0,
-                'p75_amount': 5000.0,
+                'p15_amount': 1000.0,
+                'p85_amount': 5000.0,
                 'max_age_days': 30,
             }
         
@@ -565,8 +565,8 @@ def calculate_data_ranges(
         
         # Use percentiles for amount ranges to avoid outlier distortion
         import numpy as np
-        p25_amount = float(np.percentile(amounts, 25))
-        p75_amount = float(np.percentile(amounts, 75))
+        p15_amount = float(np.percentile(amounts, 15))
+        p85_amount = float(np.percentile(amounts, 85))
         
         # Filter non-overdue orders for deadline range calculation
         non_overdue_days = [d for d in days_to_deadline_list if d >= 0]
@@ -575,8 +575,8 @@ def calculate_data_ranges(
         return {
             'min_days_to_deadline': min(days_to_deadline_list),
             'max_days_to_deadline': max_non_overdue,  # Use max non-overdue for scaling
-            'p25_amount': p25_amount,
-            'p75_amount': p75_amount,
+            'p15_amount': p15_amount,
+            'p85_amount': p85_amount,
             'max_age_days': max(age_days_list),
         }
 
