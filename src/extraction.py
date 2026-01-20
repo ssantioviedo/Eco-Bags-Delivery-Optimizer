@@ -611,7 +611,6 @@ def process_receipt(pdf_path: Path, session: Session) -> ProcessingResult:
             total_pallets=total_pallets,
             priority_score=None,  # Will be calculated in Phase 3
             status="pending",
-            created_at=datetime.utcnow(),
         )
 
         session.add(new_order)
@@ -623,7 +622,6 @@ def process_receipt(pdf_path: Path, session: Session) -> ProcessingResult:
         processed_receipt = ProcessedReceiptModel(
             receipt_id=f"RCP-{uuid.uuid4().hex[:8].upper()}",
             source_file=str(pdf_path),
-            processed_at=datetime.utcnow(),
             raw_extraction=json.dumps(extraction.model_dump(), default=str),
             generated_order_id=order_id,
             extraction_confidence=extraction.extraction_confidence,

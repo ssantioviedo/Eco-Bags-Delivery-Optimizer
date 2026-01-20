@@ -1,0 +1,29 @@
+rank,candidate_id,strategy,order_count,total_priority,zones,is_single_zone,has_mandatory,mandatory_count,total_pallets,total_distance_km,total_duration_min,solver,feasible
+1,DISP-20260120-GREEDY-B27D,greedy_zone_caba,3,1000140.51,CABA,True,True,1,8.93,50.93,149,ortools_tsp,True
+2,DISP-20260120-GREEDY-SUB-93BD,greedy_zone_caba,4,1000167.7,CABA,True,True,1,8.0,55.33,173,ortools_tsp,True
+3,DISP-20260120-GREEDY-SUB-35E3,greedy_zone_caba,3,1000081.78,CABA,True,True,1,7.09,54.83,157,ortools_tsp,True
+4,DISP-20260120-GREEDY-B86C,greedy_efficiency,3,2000083.92,"NORTH_ZONE, CABA",False,True,2,8.41,84.97,217,ortools_tsp,True
+5,DISP-20260120-GREEDY-FD99,greedy_mandatory_nearest,3,2000039.03,"NORTH_ZONE, CABA",False,True,2,8.21,85.2,218,ortools_tsp,True
+6,DISP-20260120-GREEDY-9D42,greedy_priority,2,1999998.0,"NORTH_ZONE, CABA",False,True,2,7.5,84.64,201,ortools_tsp,True
+7,DISP-20260120-GREEDY-SUB-DC32,greedy_efficiency,3,2000065.27,"NORTH_ZONE, WEST_ZONE, CABA",False,True,2,8.31,95.09,237,ortools_tsp,True
+8,DISP-20260120-GREEDY-SUB-0946,greedy_zone_north,3,1000118.55,NORTH_ZONE,True,True,1,7.36,115.21,277,ortools_tsp,True
+9,DISP-20260120-GREEDY-04D1,greedy_zone_north,3,1000182.97,NORTH_ZONE,True,True,1,6.74,114.07,275,ortools_tsp,True
+10,DISP-20260120-GREEDY-2DF4,greedy_zone_south,4,212.07,SOUTH_ZONE,True,False,0,8.06,39.95,142,ortools_tsp,True
+11,DISP-20260120-GREEDY-SUB-B422,greedy_best_fit,1,63.56,CABA,True,False,0,8.0,24.61,65,ortools_tsp,True
+12,DISP-20260120-GREEDY-SUB-ACEE,greedy_zone_caba,2,149.48,CABA,True,False,0,8.91,36.63,105,ortools_tsp,True
+13,DISP-20260120-GREEDY-SUB-6F62,greedy_zone_spillover,3,183.26,CABA,True,False,0,7.89,40.46,128,ortools_tsp,True
+14,DISP-20260120-GREEDY-SUB-9A84,greedy_zone_south,3,192.49,SOUTH_ZONE,True,False,0,6.91,39.81,126,ortools_tsp,True
+15,DISP-20260120-GREEDY-SUB-D4F8,greedy_zone_south,4,204.5,SOUTH_ZONE,True,False,0,7.28,54.33,171,ortools_tsp,True
+16,DISP-20260120-GREEDY-SUB-0881,greedy_zone_west,2,159.59,WEST_ZONE,True,False,0,5.62,62.9,157,ortools_tsp,True
+17,DISP-20260120-GREEDY-56E6,greedy_zone_west,3,225.94,WEST_ZONE,True,False,0,7.94,95.92,239,ortools_tsp,True
+18,DISP-20260120-GREEDY-SUB-F44C,greedy_zone_west,2,158.67,WEST_ZONE,True,False,0,7.13,95.1,223,ortools_tsp,True
+19,DISP-20260120-GREEDY-SUB-5E4E,greedy_priority,3,294.1,"NORTH_ZONE, SOUTH_ZONE, WEST_ZONE",False,False,0,7.82,113.82,274,ortools_tsp,True
+20,DISP-20260120-GREEDY-SUB-5109,greedy_zone_spillover,4,284.8,"NORTH_ZONE, CABA",False,False,0,7.19,113.63,290,ortools_tsp,True
+21,DISP-20260120-GREEDY-SUB-E96E,greedy_efficiency,6,477.71,"NORTH_ZONE, SOUTH_ZONE, WEST_ZONE, CABA",False,False,0,7.13,121.81,337,ortools_tsp,True
+22,DISP-20260120-GREEDY-SUB-367C,greedy_zone_west,2,167.92,WEST_ZONE,True,False,0,5.7,91.84,215,ortools_tsp,True
+23,DISP-20260120-DP_OPT-SUB-6138,dp_optimal,7,467.1,"NORTH_ZONE, SOUTH_ZONE, WEST_ZONE, CABA",False,False,0,8.78,137.96,385,ortools_tsp,True
+24,DISP-20260120-GREEDY-SUB-4E75,greedy_zone_spillover,4,356.1,"NORTH_ZONE, WEST_ZONE, CABA",False,False,0,7.87,134.01,329,ortools_tsp,True
+25,DISP-20260120-GREEDY-SUB-9B53,greedy_priority,3,302.43,"NORTH_ZONE, SOUTH_ZONE, WEST_ZONE",False,False,0,7.9,132.14,311,ortools_tsp,True
+26,DISP-20260120-GREEDY-SUB-9439,greedy_zone_north,3,188.43,NORTH_ZONE,True,False,0,8.21,127.94,303,ortools_tsp,True
+27,DISP-20260120-GREEDY-SUB-2B52,greedy_efficiency,6,447.52,"NORTH_ZONE, SOUTH_ZONE, WEST_ZONE, CABA",False,False,0,7.63,137.82,369,ortools_tsp,True
+28,DISP-20260120-GREEDY-SUB-45B0,greedy_zone_north,3,232.64,NORTH_ZONE,True,False,0,7.4,126.68,300,ortools_tsp,True

@@ -234,7 +234,6 @@ class OrderCreate(OrderBase):
 class Order(OrderBase):
     """Order schema with all attributes."""
 
-    created_at: datetime
     items: list[OrderItem] = Field(default_factory=list)
 
 
@@ -284,7 +283,6 @@ class DispatchCreate(DispatchBase):
 class Dispatch(DispatchBase):
     """Dispatch schema with all attributes."""
 
-    created_at: datetime
     orders: list[DispatchOrder] = Field(default_factory=list)
 
 
@@ -305,7 +303,6 @@ class GeocodingCacheEntry(BaseModel):
     locality: Optional[str] = None
     zone_id: Optional[ZoneId] = None
     confidence: GeocodingConfidence = GeocodingConfidence.MEDIUM
-    cached_at: datetime
 
 
 # ============================================================================
@@ -320,7 +317,6 @@ class ProcessedReceipt(BaseModel):
 
     receipt_id: str
     source_file: str
-    processed_at: datetime
     raw_extraction: dict
     generated_order_id: Optional[str] = None
     extraction_confidence: float = Field(..., ge=0, le=1)

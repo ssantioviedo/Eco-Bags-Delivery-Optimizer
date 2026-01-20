@@ -6,12 +6,14 @@ knapsack-style problem where we maximize priority while respecting truck capacit
 """
 
 import json
+import random
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from itertools import combinations
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Tuple
 
 from src.database import DatabaseManager, OrderModel, ClientModel
 
@@ -91,6 +93,7 @@ class DispatchCandidate:
     includes_mandatory: bool
     mandatory_count: int
     is_single_zone: bool
+    is_subset: bool = False
     orders: list[dict] = field(default_factory=list)
 
 
@@ -366,6 +369,312 @@ def get_mandatory_overflow_info(
         "requires_multiple_dispatches": overflow > 0,
         "estimated_dispatches_needed": max(1, int(total_pallets / max_capacity) + 1),
     }
+
+
+def select_mandatory_for_dispatch(
+    mandatory: List[OrderForSelection],
+    config: SelectorConfig,
+    preferred_zone: Optional[str] = None,
+    n_random_picks: int = 3,
+) -> List[OrderForSelection]:
+    """Select mandatory orders that fit in truck capacity using zone-based heuristics.
+
+    Heuristic priority:
+    1. Add mandatory orders from the same zone (or preferred_zone)
+    2. Add mandatory orders from adjacent zones
+    3. If still space, make random picks and keep best
+
+    Never exceeds config.hard_max capacity.
+
+    Args:
+        mandatory: All mandatory orders.
+        config: Selector configuration.
+        preferred_zone: Optional zone to prioritize.
+        n_random_picks: Number of random selections to try for best result.
+
+    Returns:
+        List of mandatory orders that fit within capacity.
+    """
+    if not mandatory:
+        return []
+
+    total_pallets = calculate_mandatory_pallets(mandatory)
+    if total_pallets <= config.hard_max:
+        return list(mandatory)
+
+    # Determine the dominant zone among mandatory orders if not specified
+    if preferred_zone is None:
+        zone_pallets: dict[str, float] = {}
+        for o in mandatory:
+            zone_pallets[o.zone_id] = zone_pallets.get(o.zone_id, 0) + o.total_pallets
+        preferred_zone = max(zone_pallets, key=zone_pallets.get) if zone_pallets else None
+
+    # Get adjacent zones
+    adjacent_zones = config.zone_adjacency.get(preferred_zone, []) if preferred_zone else []
+
+    # Categorize mandatory orders by zone proximity
+    same_zone = [o for o in mandatory if o.zone_id == preferred_zone]
+    adjacent = [o for o in mandatory if o.zone_id in adjacent_zones]
+    other = [o for o in mandatory if o.zone_id != preferred_zone and o.zone_id not in adjacent_zones]
+
+    # Sort each category by priority
+    same_zone.sort(key=lambda o: o.priority_score, reverse=True)
+    adjacent.sort(key=lambda o: o.priority_score, reverse=True)
+    other.sort(key=lambda o: o.priority_score, reverse=True)
+
+    # Greedy fill: same zone first, then adjacent, then others
+    selected = []
+    current_pallets = 0.0
+
+    for order in same_zone + adjacent + other:
+        if current_pallets + order.total_pallets <= config.hard_max:
+            selected.append(order)
+            current_pallets += order.total_pallets
+
+    # If we have room for random optimization, try a few random picks
+    if n_random_picks > 0 and len(mandatory) > len(selected):
+        best_selected = selected
+        best_priority = sum(o.priority_score for o in selected)
+
+        for _ in range(n_random_picks):
+            # Random shuffle and greedy fill
+            shuffled = list(mandatory)
+            random.shuffle(shuffled)
+            trial_selected = []
+            trial_pallets = 0.0
+
+            for order in shuffled:
+                if trial_pallets + order.total_pallets <= config.hard_max:
+                    trial_selected.append(order)
+                    trial_pallets += order.total_pallets
+
+            trial_priority = sum(o.priority_score for o in trial_selected)
+            if trial_priority > best_priority:
+                best_selected = trial_selected
+                best_priority = trial_priority
+
+        selected = best_selected
+
+    return selected
+
+
+def _run_all_strategies_on_subset(
+    subset_orders: List[OrderForSelection],
+    mandatory: List[OrderForSelection],
+    config: SelectorConfig,
+    is_subset: bool,
+) -> List[DispatchCandidate]:
+    """Run all selection strategies on a given subset of orders.
+
+    Args:
+        subset_orders: The subset of orders to run strategies on.
+        mandatory: Mandatory orders to include (may be empty). Will be filtered
+                   to fit within capacity using zone-based heuristics.
+        config: Selector configuration.
+        is_subset: Whether this is a subset (True) or full order set (False).
+
+    Returns:
+        List of DispatchCandidate objects.
+    """
+    candidates = []
+    strategies = config.strategies_enabled
+
+    # CRITICAL: Filter mandatory orders to fit within capacity
+    # This prevents candidates with impossible pallet counts (e.g., 21.41 pallets)
+    filtered_mandatory = select_mandatory_for_dispatch(mandatory, config)
+
+    strategy_map = {
+        "greedy_efficiency": (greedy_by_efficiency, SelectionStrategy.GREEDY_EFFICIENCY, {}),
+        "greedy_priority": (greedy_by_priority, SelectionStrategy.GREEDY_PRIORITY, {}),
+        "greedy_zone_caba": (greedy_by_zone, SelectionStrategy.GREEDY_ZONE_CABA, {"target_zone": "CABA"}),
+        "greedy_zone_north": (greedy_by_zone, SelectionStrategy.GREEDY_ZONE_NORTH, {"target_zone": "NORTH_ZONE"}),
+        "greedy_zone_south": (greedy_by_zone, SelectionStrategy.GREEDY_ZONE_SOUTH, {"target_zone": "SOUTH_ZONE"}),
+        "greedy_zone_west": (greedy_by_zone, SelectionStrategy.GREEDY_ZONE_WEST, {"target_zone": "WEST_ZONE"}),
+        "greedy_zone_spillover": (greedy_zone_with_spillover, SelectionStrategy.GREEDY_ZONE_SPILLOVER, {}),
+        "greedy_best_fit": (greedy_best_fit, SelectionStrategy.GREEDY_BEST_FIT, {}),
+        "dp_optimal": (dp_optimal_knapsack, SelectionStrategy.DP_OPTIMAL, {}),
+        "mandatory_first": (mandatory_first, SelectionStrategy.MANDATORY_FIRST, {}),
+        "greedy_mandatory_nearest": (greedy_mandatory_nearest, SelectionStrategy.GREEDY_MANDATORY_NEAREST, {}),
+    }
+
+    for strategy_name in strategies:
+        if strategy_name not in strategy_map:
+            continue
+
+        func, strategy_enum, extra_kwargs = strategy_map[strategy_name]
+
+        if "target_zone" in extra_kwargs:
+            selected = func(subset_orders, extra_kwargs["target_zone"], filtered_mandatory, config)
+        else:
+            selected = func(subset_orders, filtered_mandatory, config)
+
+        if selected:
+            # Double-check: reject candidates that exceed hard_max (safety net)
+            total_pallets = sum(o.total_pallets for o in selected)
+            if total_pallets > config.hard_max:
+                continue
+            
+            candidate = build_dispatch_candidate(selected, strategy_enum, config, is_subset=is_subset)
+            if candidate:
+                candidates.append(candidate)
+
+    return candidates
+
+
+def generate_candidates_by_subsets(
+    orders: List[OrderForSelection],
+    config: SelectorConfig,
+    n_random_subsets: int = 10,
+    top_n_for_random: int = 14,
+    random_seed: Optional[int] = None,
+) -> Tuple[List[DispatchCandidate], dict]:
+    """Generate dispatch candidates by running all strategies on multiple subsets.
+
+    Workflow:
+    1. Run all strategies on FULL order set (is_subset=False)
+    2. Run all strategies on NON-MANDATORY orders only (is_subset=True)
+    3. Random subsets from ALL orders (including mandatory)
+    4. Random subsets from ALL non-mandatory orders
+    5. Random subsets from TOP priority orders (with mandatory)
+    6. Random subsets from TOP priority non-mandatory orders
+
+    Subset size minimum: 60% of total orders length.
+
+    Args:
+        orders: Full list of pending orders.
+        config: Selector configuration.
+        n_random_subsets: Number of random subsets per category.
+        top_n_for_random: Consider top N orders by priority for "top priority" subsets.
+        random_seed: Optional seed for reproducibility.
+
+    Returns:
+        Tuple of (candidates, generation_info) where generation_info contains subset details.
+    """
+    if random_seed is not None:
+        random.seed(random_seed)
+
+    all_candidates = []
+    generation_info = {
+        "full_set_count": 0,
+        "non_mandatory_set_count": 0,
+        "random_all_orders_count": 0,
+        "random_non_mandatory_count": 0,
+        "random_top_with_mandatory_count": 0,
+        "random_top_without_mandatory_count": 0,
+        "subsets_generated": [],
+    }
+
+    # Separate mandatory and non-mandatory orders
+    mandatory_orders = [o for o in orders if o.is_mandatory]
+    non_mandatory_orders = [o for o in orders if not o.is_mandatory]
+
+    # Minimum subset size: 60% of total orders
+    min_subset_size = max(3, int(len(orders) * 0.6))
+
+    # 1. FULL ORDER SET (is_subset=False)
+    candidates_full = _run_all_strategies_on_subset(
+        orders, mandatory_orders, config, is_subset=False
+    )
+    all_candidates.extend(candidates_full)
+    generation_info["full_set_count"] = len(candidates_full)
+    generation_info["subsets_generated"].append({
+        "name": "full_set",
+        "order_count": len(orders),
+        "includes_mandatory": True,
+        "candidates_generated": len(candidates_full),
+    })
+
+    # 2. NON-MANDATORY ORDERS ONLY (is_subset=True)
+    if len(non_mandatory_orders) >= min_subset_size:
+        candidates_non_mand = _run_all_strategies_on_subset(
+            non_mandatory_orders, [], config, is_subset=True
+        )
+        all_candidates.extend(candidates_non_mand)
+        generation_info["non_mandatory_set_count"] = len(candidates_non_mand)
+        generation_info["subsets_generated"].append({
+            "name": "non_mandatory_only",
+            "order_count": len(non_mandatory_orders),
+            "includes_mandatory": False,
+            "candidates_generated": len(candidates_non_mand),
+        })
+
+    # Prepare pools for random subsets
+    top_priority_orders = sorted(orders, key=lambda o: o.priority_score, reverse=True)[:top_n_for_random]
+    top_priority_non_mandatory = sorted(non_mandatory_orders, key=lambda o: o.priority_score, reverse=True)[:top_n_for_random]
+
+    # Helper function to generate random subset and run strategies
+    def _generate_random_subset_candidates(
+        pool: List[OrderForSelection],
+        include_mandatory: bool,
+        subset_name: str,
+    ) -> int:
+        """Generate candidates from a random subset of the pool."""
+        if len(pool) < min_subset_size:
+            return 0
+
+        # Random subset size: between min_subset_size and len(pool)
+        subset_size = random.randint(min_subset_size, len(pool))
+        subset = random.sample(pool, subset_size)
+
+        # Determine which mandatory orders to include (from subset or separately)
+        if include_mandatory:
+            subset_mandatory = [o for o in subset if o.is_mandatory]
+            # If no mandatory in subset, add some from mandatory_orders
+            if not subset_mandatory and mandatory_orders:
+                # Randomly pick some mandatory orders to include
+                n_mandatory_to_add = min(len(mandatory_orders), random.randint(1, len(mandatory_orders)))
+                subset_mandatory = random.sample(mandatory_orders, n_mandatory_to_add)
+                subset = subset + [o for o in subset_mandatory if o not in subset]
+        else:
+            subset_mandatory = []
+            # Remove any mandatory from subset
+            subset = [o for o in subset if not o.is_mandatory]
+
+        if len(subset) < 3:
+            return 0
+
+        candidates_random = _run_all_strategies_on_subset(
+            subset, subset_mandatory, config, is_subset=True
+        )
+        all_candidates.extend(candidates_random)
+        generation_info["subsets_generated"].append({
+            "name": subset_name,
+            "order_count": len(subset),
+            "includes_mandatory": include_mandatory,
+            "candidates_generated": len(candidates_random),
+        })
+        return len(candidates_random)
+
+    # 3. RANDOM SUBSETS FROM ALL ORDERS (including mandatory)
+    n_per_category = max(1, n_random_subsets // 4)
+    for i in range(n_per_category):
+        count = _generate_random_subset_candidates(
+            list(orders), True, f"random_all_orders_{i+1}"
+        )
+        generation_info["random_all_orders_count"] += count
+
+    # 4. RANDOM SUBSETS FROM ALL NON-MANDATORY ORDERS
+    for i in range(n_per_category):
+        count = _generate_random_subset_candidates(
+            list(non_mandatory_orders), False, f"random_non_mandatory_{i+1}"
+        )
+        generation_info["random_non_mandatory_count"] += count
+
+    # 5. RANDOM SUBSETS FROM TOP PRIORITY ORDERS (with mandatory)
+    for i in range(n_per_category):
+        count = _generate_random_subset_candidates(
+            list(top_priority_orders), True, f"random_top_with_mandatory_{i+1}"
+        )
+        generation_info["random_top_with_mandatory_count"] += count
+
+    # 6. RANDOM SUBSETS FROM TOP PRIORITY NON-MANDATORY ORDERS
+    for i in range(n_per_category):
+        count = _generate_random_subset_candidates(
+            list(top_priority_non_mandatory), False, f"random_top_without_mandatory_{i+1}"
+        )
+        generation_info["random_top_without_mandatory_count"] += count
+
+    return all_candidates, generation_info
 
 
 # ============================================================================
@@ -970,6 +1279,7 @@ def build_dispatch_candidate(
     selected_orders: list[OrderForSelection],
     strategy: SelectionStrategy,
     config: SelectorConfig,
+    is_subset: bool = False,
 ) -> Optional[DispatchCandidate]:
     """Build a DispatchCandidate from selected orders.
 
@@ -977,6 +1287,7 @@ def build_dispatch_candidate(
         selected_orders: List of selected orders.
         strategy: The strategy used for selection.
         config: Selector configuration.
+        is_subset: Whether this candidate was generated from a subset of orders.
 
     Returns:
         DispatchCandidate object or None if invalid.
@@ -1004,7 +1315,9 @@ def build_dispatch_candidate(
         for o in selected_orders
     ]
 
-    candidate_id = f"DISP-{datetime.now().strftime('%Y%m%d')}-{strategy.value[:6].upper()}-{uuid.uuid4().hex[:4].upper()}"
+    # Include subset indicator in candidate ID if applicable
+    subset_tag = "-SUB" if is_subset else ""
+    candidate_id = f"DISP-{datetime.now().strftime('%Y%m%d')}-{strategy.value[:6].upper()}{subset_tag}-{uuid.uuid4().hex[:4].upper()}"
 
     return DispatchCandidate(
         candidate_id=candidate_id,
@@ -1020,6 +1333,7 @@ def build_dispatch_candidate(
         includes_mandatory=len(mandatory_orders) > 0,
         mandatory_count=len(mandatory_orders),
         is_single_zone=len(zones) == 1,
+        is_subset=is_subset,
         orders=order_details,
     )
 
@@ -1412,9 +1726,14 @@ def get_candidates_summary_df(candidates: list[DispatchCandidate], include_order
 
     data = []
     for c in candidates:
+        # Show strategy with (subset) suffix if applicable
+        strategy_display = c.strategy.value
+        if c.is_subset:
+            strategy_display = f"{strategy_display} (subset)"
+        
         row = {
             "candidate_id": c.candidate_id,
-            "strategy": c.strategy.value,
+            "strategy": strategy_display,
             "total_pallets": c.total_pallets,
             "adjusted_priority": c.adjusted_priority,
             "total_priority": c.total_priority,
@@ -1424,6 +1743,7 @@ def get_candidates_summary_df(candidates: list[DispatchCandidate], include_order
             "is_single_zone": c.is_single_zone,
             "order_count": len(c.order_ids),
             "mandatory_count": c.mandatory_count,
+            "is_subset": c.is_subset,
         }
         if include_order_ids:
             row["order_ids"] = ", ".join(c.order_ids)

@@ -1,0 +1,26 @@
+{
+  "depot": {
+    "id": "DEPOT",
+    "name": "ECO-BAGS",
+    "latitude": -34.73231090267173,
+    "longitude": -58.295889556357935
+  },
+  "assumptions": {
+    "average_speed_kmh": 30,
+    "service_time_minutes": 15,
+    "default_start_time": "08:00",
+    "max_route_duration_minutes": 480
+  },
+  "solver": {
+    "preferred": "ortools",
+    "fallback": "nearest_neighbor",
+    "ortools_time_limit_seconds": 30
+  },
+  "visualization": {
+    "stop_color": "#2E8B57",
+    "route_color": "#2E8B57",
+    "route_weight": 4,
+    "zoom_start": 11,
+    "route_colors": ["#2E8B57", "#FF6B6B", "#4ECDC4", "#9B59B6", "#F39C12"]
+  }
+}

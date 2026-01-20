@@ -483,7 +483,6 @@ def cache_geocoding_result(result: GeocodingResult, session: Session) -> None:
         locality=result.locality,
         zone_id=result.zone_id,
         confidence=result.confidence.value,
-        cached_at=datetime.utcnow(),
     )
     session.merge(cache_entry)
     session.commit()

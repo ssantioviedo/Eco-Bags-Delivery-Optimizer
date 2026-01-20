@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-01-20T00:35:14.369150",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "candidate_id": "DISP-20260120-GREEDY-B86C",
+      "strategy": "greedy_efficiency",
+      "generated_at": "2026-01-20T00:35:14.369162",
+      "orders": [
+        {
+          "order_id": "ORD-85CA3985",
+          "client_name": "Comercial San Martin",
+          "pallets": 3.71,
+          "priority_score": 999999.0,
+          "zone_id": "CABA",
+          "is_mandatory": true
+        },
+        {
+          "order_id": "ORD-19DC5AB0",
+          "client_name": "Mayorista Don Juan",
+          "pallets": 3.79,
+          "priority_score": 999999.0,
+          "zone_id": "NORTH_ZONE",
+          "is_mandatory": true
+        },
+        {
+          "order_id": "ORD-85EB94F2",
+          "client_name": "Comercial El Puente",
+          "pallets": 0.91,
+          "priority_score": 85.92,
+          "zone_id": "CABA",
+          "is_mandatory": false
+        }
+      ],
+      "summary": {
+        "total_pallets": 8.41,
+        "total_priority": 2000083.92,
+        "utilization_pct": 105.1,
+        "order_count": 3,
+        "zones": [
+          "NORTH_ZONE",
+          "CABA"
+        ],
+        "zone_breakdown": {
+          "CABA": 2,
+          "NORTH_ZONE": 1
+        },
+        "is_single_zone": false,
+        "zone_dispersion_penalty": 0.95,
+        "adjusted_priority": 1900079.72,
+        "mandatory_included": true,
+        "mandatory_count": 2
+      }
+    }
+  ]
+}

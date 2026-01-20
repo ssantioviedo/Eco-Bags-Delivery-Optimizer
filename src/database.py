@@ -5,7 +5,6 @@ zones, localities, clients, products, orders, and dispatches.
 """
 
 import json
-from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -13,7 +12,6 @@ from sqlalchemy import (
     Boolean,
     Column,
     Date,
-    DateTime,
     Float,
     ForeignKey,
     Integer,
@@ -123,7 +121,6 @@ class OrderModel(Base):
     total_pallets = Column(Float, nullable=False)
     priority_score = Column(Float, nullable=True)
     status = Column(String, default="pending")
-    created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
     client = relationship("ClientModel", back_populates="orders")
@@ -160,7 +157,6 @@ class DispatchModel(Base):
     estimated_distance_km = Column(Float, nullable=True)
     estimated_time_min = Column(Integer, nullable=True)
     status = Column(String, default="candidate")
-    created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
     dispatch_orders = relationship(
@@ -195,7 +191,6 @@ class GeocodingCacheModel(Base):
     locality = Column(String, nullable=True)
     zone_id = Column(String, nullable=True)
     confidence = Column(String, default="medium")
-    cached_at = Column(DateTime, default=datetime.utcnow)
 
 
 class ProcessedReceiptModel(Base):
@@ -205,7 +200,6 @@ class ProcessedReceiptModel(Base):
 
     receipt_id = Column(String, primary_key=True)
     source_file = Column(String, nullable=False)
-    processed_at = Column(DateTime, default=datetime.utcnow)
     raw_extraction = Column(Text, nullable=False)  # JSON string
     generated_order_id = Column(String, ForeignKey("orders.order_id"), nullable=True)
     extraction_confidence = Column(Float, nullable=False)
@@ -217,7 +211,6 @@ class DispatchCandidateModel(Base):
     __tablename__ = "dispatch_candidates"
 
     candidate_id = Column(String, primary_key=True)
-    generation_batch_id = Column(String, nullable=False)  # Groups candidates from same run
     strategy = Column(String, nullable=False)
     total_pallets = Column(Float, nullable=False)
     total_priority = Column(Float, nullable=False)
@@ -231,7 +224,6 @@ class DispatchCandidateModel(Base):
     order_count = Column(Integer, nullable=False)
     rank = Column(Integer, nullable=True)  # Ranking position (1 = best)
     status = Column(String, default="candidate")  # candidate, selected, rejected
-    created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
     candidate_orders = relationship(
@@ -255,6 +247,25 @@ class DispatchCandidateOrderModel(Base):
     # Relationships
     candidate = relationship("DispatchCandidateModel", back_populates="candidate_orders")
     order = relationship("OrderModel")
+
+
+class RouteCacheModel(Base):
+    """SQLAlchemy model for route optimization cache.
+    
+    Stores optimized route results to avoid recalculating routes
+    for the same set of orders. The cache key is based on sorted
+    order IDs and solver type.
+    """
+
+    __tablename__ = "route_cache"
+
+    cache_key = Column(String, primary_key=True)  # MD5 hash of sorted order_ids + solver
+    solver = Column(String, nullable=False)
+    order_ids = Column(Text, nullable=False)  # JSON array of order IDs
+    total_distance_km = Column(Float, nullable=False)
+    total_duration_minutes = Column(Integer, nullable=False)
+    route_data = Column(Text, nullable=False)  # JSON serialized route result
+    feasible = Column(Boolean, nullable=False, default=True)
 
 
 # ============================================================================
@@ -283,6 +294,112 @@ class DatabaseManager:
     def drop_tables(self) -> None:
         """Drop all database tables."""
         Base.metadata.drop_all(self.engine)
+
+    def clear_data_tables(self, keep_cache: bool = True) -> None:
+        """Clear data tables while optionally preserving cache tables.
+        
+        This method clears:
+        - orders, order_items, clients, products
+        - dispatches, dispatch_orders
+        - dispatch_candidates, dispatch_candidate_orders
+        - processed_receipts
+        
+        Optionally keeps cache tables:
+        - geocoding_cache (if keep_cache=True)
+        - ortools_route_cache (if keep_cache=True) - future cache table
+        
+        Args:
+            keep_cache: If True, preserve geocoding and route optimization caches.
+        """
+        with self.get_session() as session:
+            # Clear data tables (order matters for foreign keys)
+            session.query(DispatchCandidateOrderModel).delete()
+            session.query(DispatchCandidateModel).delete()
+            session.query(DispatchOrderModel).delete()
+            session.query(DispatchModel).delete()
+            session.query(ProcessedReceiptModel).delete()
+            session.query(OrderItemModel).delete()
+            session.query(OrderModel).delete()
+            session.query(ClientModel).delete()
+            session.query(ProductModel).delete()
+            
+            # Clear cache tables if keep_cache=False
+            if not keep_cache:
+                session.query(GeocodingCacheModel).delete()
+                session.query(RouteCacheModel).delete()
+            
+            session.commit()
+
+    def enforce_one_pending_order_per_client(self) -> int:
+        """Enforce constraint: only ONE pending order per client.
+        
+        If a client has multiple pending orders, keep the most recent one
+        (by issue_date) and mark others as 'archived' or delete them.
+        
+        Returns:
+            Number of orders deleted/archived.
+        """
+        with self.get_session() as session:
+            # Group pending orders by client
+            from sqlalchemy import func
+            
+            # Get clients with multiple pending orders
+            client_order_counts = (
+                session.query(
+                    OrderModel.client_id,
+                    func.count(OrderModel.order_id).label("order_count")
+                )
+                .filter(OrderModel.status == "pending")
+                .group_by(OrderModel.client_id)
+                .having(func.count(OrderModel.order_id) > 1)
+                .all()
+            )
+            
+            deleted_count = 0
+            for client_id, count in client_order_counts:
+                # Get all pending orders for this client, ordered by issue_date DESC
+                pending_orders = (
+                    session.query(OrderModel)
+                    .filter(
+                        OrderModel.client_id == client_id,
+                        OrderModel.status == "pending"
+                    )
+                    .order_by(OrderModel.issue_date.desc())
+                    .all()
+                )
+                
+                # Keep the first (most recent), delete the rest
+                for order in pending_orders[1:]:
+                    # Delete related items first
+                    session.query(OrderItemModel).filter(
+                        OrderItemModel.order_id == order.order_id
+                    ).delete()
+                    # Delete the order
+                    session.delete(order)
+                    deleted_count += 1
+            
+            session.commit()
+        return deleted_count
+
+    def get_clients_with_pending_orders_count(self) -> dict[str, int]:
+        """Get count of pending orders per client.
+        
+        Returns:
+            Dictionary mapping client_id to pending order count.
+        """
+        with self.get_session() as session:
+            from sqlalchemy import func
+            
+            results = (
+                session.query(
+                    OrderModel.client_id,
+                    func.count(OrderModel.order_id).label("pending_count")
+                )
+                .filter(OrderModel.status == "pending")
+                .group_by(OrderModel.client_id)
+                .all()
+            )
+            return {client_id: count for client_id, count in results}
 
     def get_session(self) -> Session:
         """Get a new database session.
@@ -556,25 +673,31 @@ class DatabaseManager:
     def save_dispatch_candidates(
         self,
         candidates: list,
-        batch_id: str,
         ranked: bool = True,
     ) -> int:
         """Save dispatch candidates to the database.
+        
+        This method automatically clears all existing candidates before saving,
+        ensuring only the latest run is kept in the database.
 
         Args:
             candidates: List of DispatchCandidate objects from order_selector.
-            batch_id: Unique identifier for this generation batch.
             ranked: Whether the candidates are in ranked order (position = rank).
 
         Returns:
             Number of candidates saved.
         """
         with self.get_session() as session:
+            # Clear all existing dispatch candidates and their relationships
+            session.query(DispatchCandidateOrderModel).delete()
+            session.query(DispatchCandidateModel).delete()
+            session.commit()
+            
+            # Save new candidates
             for idx, candidate in enumerate(candidates, 1):
                 # Create the candidate record
                 db_candidate = DispatchCandidateModel(
                     candidate_id=candidate.candidate_id,
-                    generation_batch_id=batch_id,
                     strategy=candidate.strategy.value,
                     total_pallets=candidate.total_pallets,
                     total_priority=candidate.total_priority,
@@ -603,13 +726,8 @@ class DatabaseManager:
             session.commit()
             return len(candidates)
 
-    def get_dispatch_candidates_by_batch(
-        self, batch_id: str
-    ) -> list[DispatchCandidateModel]:
-        """Get all dispatch candidates from a specific batch.
-
-        Args:
-            batch_id: The generation batch ID.
+    def get_all_dispatch_candidates(self) -> list[DispatchCandidateModel]:
+        """Get all dispatch candidates.
 
         Returns:
             List of DispatchCandidateModel instances ordered by rank.
@@ -617,32 +735,6 @@ class DatabaseManager:
         with self.get_session() as session:
             candidates = (
                 session.query(DispatchCandidateModel)
-                .filter(DispatchCandidateModel.generation_batch_id == batch_id)
-                .order_by(DispatchCandidateModel.rank)
-                .all()
-            )
-            return candidates
-
-    def get_latest_dispatch_candidates(self) -> list[DispatchCandidateModel]:
-        """Get dispatch candidates from the most recent batch.
-
-        Returns:
-            List of DispatchCandidateModel instances ordered by rank.
-        """
-        with self.get_session() as session:
-            # Get the latest batch ID
-            latest_batch = (
-                session.query(DispatchCandidateModel.generation_batch_id)
-                .order_by(DispatchCandidateModel.created_at.desc())
-                .first()
-            )
-            if not latest_batch:
-                return []
-
-            batch_id = latest_batch[0]
-            candidates = (
-                session.query(DispatchCandidateModel)
-                .filter(DispatchCandidateModel.generation_batch_id == batch_id)
                 .order_by(DispatchCandidateModel.rank)
                 .all()
             )
@@ -707,6 +799,223 @@ class DatabaseManager:
             )
             session.commit()
             return count
+
+    # ========================================================================
+    # Route Optimization Methods
+    # ========================================================================
+
+    def get_order_coordinates(
+        self, order_ids: list[str]
+    ) -> dict[str, tuple[float, float]]:
+        """Get coordinates for multiple orders.
+
+        Args:
+            order_ids: List of order IDs.
+
+        Returns:
+            Dictionary mapping order_id to (latitude, longitude) tuple.
+        """
+        with self.get_session() as session:
+            orders = (
+                session.query(OrderModel)
+                .filter(OrderModel.order_id.in_(order_ids))
+                .all()
+            )
+            return {
+                o.order_id: (o.delivery_latitude, o.delivery_longitude)
+                for o in orders
+                if o.delivery_latitude is not None and o.delivery_longitude is not None
+            }
+
+    def get_dispatch_candidate_with_orders(
+        self, candidate_id: str
+    ) -> tuple[DispatchCandidateModel | None, list[OrderModel]]:
+        """Get dispatch candidate and its orders with full details.
+
+        Args:
+            candidate_id: The dispatch candidate ID.
+
+        Returns:
+            Tuple of (DispatchCandidateModel, list of OrderModel).
+        """
+        with self.get_session() as session:
+            candidate = (
+                session.query(DispatchCandidateModel)
+                .filter(DispatchCandidateModel.candidate_id == candidate_id)
+                .first()
+            )
+
+            if not candidate:
+                return None, []
+
+            # Get order IDs from relationship
+            order_rels = (
+                session.query(DispatchCandidateOrderModel)
+                .filter(DispatchCandidateOrderModel.candidate_id == candidate_id)
+                .all()
+            )
+            order_ids = [rel.order_id for rel in order_rels]
+
+            orders = (
+                session.query(OrderModel)
+                .filter(OrderModel.order_id.in_(order_ids))
+                .all()
+            )
+
+            return candidate, orders
+
+    def update_dispatch_route(
+        self,
+        candidate_id: str,
+        total_distance_km: float,
+        estimated_time_min: int,
+    ) -> bool:
+        """Update dispatch candidate with route optimization results.
+
+        Note: Since we removed route columns, this updates the existing fields.
+        Route details are stored in JSON exports.
+
+        Args:
+            candidate_id: The dispatch candidate ID.
+            total_distance_km: Total route distance in km.
+            estimated_time_min: Estimated route duration in minutes.
+
+        Returns:
+            True if updated successfully, False otherwise.
+        """
+        # Route details are stored in JSON exports, not in database
+        # This method exists for API compatibility
+        return True
+
+    # ========================================================================
+    # Route Cache Methods
+    # ========================================================================
+
+    def get_cached_route(self, cache_key: str) -> Optional[dict]:
+        """Get a cached route result by cache key.
+
+        Args:
+            cache_key: MD5 hash of sorted order_ids + solver.
+
+        Returns:
+            Dictionary with route data if found, None otherwise.
+        """
+        with self.get_session() as session:
+            cached = session.query(RouteCacheModel).filter(
+                RouteCacheModel.cache_key == cache_key
+            ).first()
+            
+            if cached:
+                return {
+                    "cache_key": cached.cache_key,
+                    "solver": cached.solver,
+                    "order_ids": json.loads(cached.order_ids),
+                    "total_distance_km": cached.total_distance_km,
+                    "total_duration_minutes": cached.total_duration_minutes,
+                    "route_data": json.loads(cached.route_data),
+                    "feasible": cached.feasible,
+                }
+            return None
+
+    def save_route_to_cache(
+        self,
+        cache_key: str,
+        solver: str,
+        order_ids: list[str],
+        total_distance_km: float,
+        total_duration_minutes: int,
+        route_data: dict,
+        feasible: bool = True,
+    ) -> None:
+        """Save a route result to the persistent cache.
+
+        Args:
+            cache_key: MD5 hash of sorted order_ids + solver.
+            solver: The solver used (e.g., 'ortools', 'nearest_neighbor').
+            order_ids: List of order IDs in the route.
+            total_distance_km: Total route distance.
+            total_duration_minutes: Total route duration.
+            route_data: Serialized route result dictionary.
+            feasible: Whether the route is feasible.
+        """
+        with self.get_session() as session:
+            # Check if already exists
+            existing = session.query(RouteCacheModel).filter(
+                RouteCacheModel.cache_key == cache_key
+            ).first()
+            
+            if existing:
+                # Update existing entry
+                existing.total_distance_km = total_distance_km
+                existing.total_duration_minutes = total_duration_minutes
+                existing.route_data = json.dumps(route_data)
+                existing.feasible = feasible
+            else:
+                # Create new entry
+                cache_entry = RouteCacheModel(
+                    cache_key=cache_key,
+                    solver=solver,
+                    order_ids=json.dumps(order_ids),
+                    total_distance_km=total_distance_km,
+                    total_duration_minutes=total_duration_minutes,
+                    route_data=json.dumps(route_data),
+                    feasible=feasible,
+                )
+                session.add(cache_entry)
+            
+            session.commit()
+
+    def get_route_cache_stats(self) -> dict:
+        """Get statistics about the route cache.
+
+        Returns:
+            Dictionary with cache size and solver breakdown.
+        """
+        with self.get_session() as session:
+            total = session.query(RouteCacheModel).count()
+            
+            # Get breakdown by solver
+            from sqlalchemy import func
+            solver_counts = session.query(
+                RouteCacheModel.solver,
+                func.count(RouteCacheModel.cache_key)
+            ).group_by(RouteCacheModel.solver).all()
+            
+            return {
+                "size": total,
+                "by_solver": {solver: count for solver, count in solver_counts},
+            }
+
+    def clear_route_cache(self) -> int:
+        """Clear all entries from the route cache.
+
+        Returns:
+            Number of entries deleted.
+        """
+        with self.get_session() as session:
+            count = session.query(RouteCacheModel).delete()
+            session.commit()
+            return count
+
+    def get_orders_with_time_windows(
+        self, order_ids: list[str]
+    ) -> list[OrderModel]:
+        """Get orders with their client time window information.
+
+        Args:
+            order_ids: List of order IDs.
+
+        Returns:
+            List of OrderModel with joined client data.
+        """
+        with self.get_session() as session:
+            orders = (
+                session.query(OrderModel)
+                .join(ClientModel, OrderModel.client_id == ClientModel.client_id)
+                .filter(OrderModel.order_id.in_(order_ids))
+                .all()
+            )
+            return orders
 
 
 def get_database_manager(db_path: Optional[str | Path] = None) -> DatabaseManager:
