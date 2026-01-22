@@ -55,12 +55,12 @@ Given incoming sales receipts (PDF/DOCX/Excel) and operational constraints:
 ## System Architecture
 
 ```
-┌──────────────┐   ┌──────────────┐   ┌────────────┐   ┌──────────────┐
-│ PDF Receipts │──▶│ AI Extraction│──▶│ Validation │──▶│ Priority   │
-│ (Variable)   │   │ (Gemini 2.5) │   │ (Pydantic) │   │ Score        │
-└──────────────┘   └──────────────┘   └────────────┘   └──────┬───────┘
-                                                              │
-┌──────────────┐   ┌──────────────┐   ┌───────────────────────▼───────────┐
+┌──────────────┐    ┌──────────────┐    ┌────────────┐    ┌──────────────┐
+│ PDF Receipts │──▶│ AI Extraction │──▶│ Validation │──▶│ Priority     │
+│ (Variable)   │    │ (Gemini 2.5) │    │ (Pydantic) │    │ Score        │
+└──────────────┘    └──────────────┘    └────────────┘    └──────┬───────┘
+                                                                 │
+┌──────────────┐   ┌──────────────┐   ┌──────────────────────────▼────────┐
 │ Route Maps   │◀──│ TSP Optimizer│◀─│ Dispatch Candidates Generator     │
 │ (Folium)     │   │ (OR-Tools)   │   │ (Multi-strategy)                  │
 └──────────────┘   └──────────────┘   └───────────────────────────────────┘
