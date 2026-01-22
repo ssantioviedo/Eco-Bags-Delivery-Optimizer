@@ -1,0 +1,106 @@
+{
+  "Invoice_Coffee_Shop.pdf": {
+    "client_name": "O'connor Coffee Shop",
+    "tax_id": "20-432.135.67-9",
+    "issue_date": "2026-01-10",
+    "delivery_address": "Av. Regimiento de Patricios 1030, CABA",
+    "items": [
+      {
+        "product": "ECO-MEDIUM-160",
+        "quantity": 160,
+        "bag_type": "medium",
+        "bag_type_raw": "Bolsa mediana color café"
+      },
+      {
+        "product": "ECO-MEDIUM-160",
+        "quantity": 160,
+        "bag_type": "medium",
+        "bag_type_raw": "Bolsa mediana color blanca"
+      }
+    ],
+    "total_amount": 29040.0,
+    "total_packs": 320,
+    "payment_status": "unknown",
+    "extraction_confidence": 0.98,
+    "requires_review": false,
+    "extraction_notes": "All requested data was clearly identified and extracted without ambiguity. The total packs '320' was explicitly stated as 'Valor bruto total 320'."
+  },
+  "Invoice_FMartínez.pdf": {
+    "client_name": "FMartínez S.A.",
+    "tax_id": "20-45375498-9",
+    "issue_date": "2026-01-15",
+    "delivery_address": "José Hernández 3302, Tortuguitas",
+    "items": [
+      {
+        "product": "ECO-SMALL-120",
+        "quantity": 120,
+        "bag_type": "small",
+        "bag_type_raw": "Bolsa chica de fantasía, color celeste y blanca x250"
+      }
+    ],
+    "total_amount": 1000.45,
+    "total_packs": 120,
+    "payment_status": "unknown",
+    "extraction_confidence": 0.95,
+    "requires_review": false,
+    "extraction_notes": "The item description includes 'x250', but the quantity '120' from the 'Cantidad' column was used for 'quantity_packs', as it represents the explicit number of units/packs ordered."
+  },
+  "Invoice_Toy_Store.pdf": {
+    "client_name": "Juguetería Fran Cardozo",
+    "tax_id": "Not found",
+    "issue_date": "2026-01-13",
+    "delivery_address": "Calle 155 N°50, Berazategui",
+    "items": [
+      {
+        "product": "ECO-LARGE-025",
+        "quantity": 25,
+        "bag_type": "large",
+        "bag_type_raw": "Bolsa grande de fantasía x250, con logo"
+      },
+      {
+        "product": "ECO-MEDIUM-030",
+        "quantity": 30,
+        "bag_type": "medium",
+        "bag_type_raw": "Bolsa lisa. tamaño mediana, color rojo x250"
+      },
+      {
+        "product": "ECO-MEDIUM-030",
+        "quantity": 30,
+        "bag_type": "medium",
+        "bag_type_raw": "Bolsa lisa. tamaño mediana, color rojo x250"
+      }
+    ],
+    "total_amount": 16000.0,
+    "total_packs": 0,
+    "payment_status": "unknown",
+    "extraction_confidence": 0.95,
+    "requires_review": false,
+    "extraction_notes": "Client tax ID (CUIT) was not found in the document. Total packs amount was not explicitly stated in the document."
+  },
+  "Receipt_El_Gaucho.pdf": {
+    "client_name": "MAYORISTA EL GAUCHO",
+    "tax_id": "Not found",
+    "issue_date": "2026-01-02",
+    "delivery_address": "Av. Independencia 3403, Ingeniero Maschwitz, Buenos Aires",
+    "items": [
+      {
+        "product": "ECO-MEDIUM-028",
+        "quantity": 28,
+        "bag_type": "medium",
+        "bag_type_raw": "Bolsa blanca lisa, mediana x250"
+      },
+      {
+        "product": "ECO-LARGE-020",
+        "quantity": 20,
+        "bag_type": "large",
+        "bag_type_raw": "Bolsa gigante supermercado, de fantasía x250"
+      }
+    ],
+    "total_amount": 5880.6,
+    "total_packs": 0,
+    "payment_status": "unknown",
+    "extraction_confidence": 0.95,
+    "requires_review": false,
+    "extraction_notes": "Client tax ID (CUIT) was not found in the document. Total packs were not explicitly stated as a sum, only individual line item quantities were provided."
+  }
+}

@@ -1,247 +1,283 @@
 # Eco-Bags Delivery Optimization System
-### Document AI → Priority Scoring → Dispatch Selection → Route optimization
 
-End-to-end applied optimization project focused on turning messy sales receipts into actionable daily dispatch plans for an eco-friendly reusable bag factory in Buenos Aires, maximizing service level and truck utilization while respecting real operational constraints.
+### Document AI → Priority Scoring → Dispatch Selection → Route Optimization
 
-Tech stack (current): Python · Poetry · SQLite (SQLAlchemy) · Pydantic v2 · Google Gemini (google-genai)
-· Geopy (Nominatim) · Plotly · Folium · Streamlit (showcase viewer)
+An end-to-end applied optimization project that transforms messy sales receipts into actionable daily dispatch plans for an eco-friendly reusable bag factory in Buenos Aires. The system maximizes service level and truck utilization while respecting real operational constraints.
 
-Status: In progress · Foundations + PDF receipt extraction implemented · Optimization/routing planned
-
+**Tech Stack**: Python · Poetry · SQLite (SQLAlchemy) · Pydantic v2 · Google Gemini (AI Extraction) · OR-Tools (Optimization) · Geopy (Geocoding) · Plotly · Folium · Streamlit
 
 ---
-
 
 ## Motivation
+
 Delivery planning is where small operational frictions compound into real business cost:
 
-- Sales orders arrive in heterogeneous formats (DOCX/Excel, per-salesperson styles)
-- Decisions must balance urgency, client priority, payment status, and fairness
-- A single truck with limited capacity forces trade-offs every day
-- Geography matters: zone mixing can waste time, increase late deliveries, and create operational chaos
-
-This project builds a reusable system that standardizes incoming orders, validates and enriches them (geocoding + zoning), and lays the groundwork for a complete optimization pipeline.
-
+- Sales orders arrive in **heterogeneous formats** (PDF/DOCX/Excel, per-salesperson styles)
+- Decisions must balance **urgency, client priority, payment status, and fairness**
+- A single truck with **limited capacity** forces trade-offs every day
+- **Geography matters**: zone mixing wastes time, increases late deliveries, and creates operational chaos
 
 ---
-
 
 ## Problem Statement
+
 Given incoming sales receipts (PDF/DOCX/Excel) and operational constraints:
 
-1. Extract structured order data from inconsistent receipt templates (LLM-based)
-2. Validate & persist it (schemas + database)
-3. Enrich orders with geocoding and zone assignment
-4. (Next) Prioritize and generate candidate dispatches under truck capacity constraints
-5. (Next) Optimize routing and publish dispatch plans
-
+1. **Extract** structured order data from inconsistent receipt templates (LLM-based)
+2. **Validate & Persist** data using strict schemas + database
+3. **Enrich** orders with geocoding and zone assignment
+4. **Prioritize** orders using weighted scoring (urgency, payment, client type, age)
+5. **Generate** candidate dispatches under truck capacity constraints
+6. **Optimize** routes and publish dispatch plans with interactive maps
 
 ---
-
 
 ## Operational Constraints (Real-World)
-- Single depot (factory in Buenos Aires)
-- One truck, capacity 8 pallets
-- Typical dispatch: ~10 orders
-- Prefer dispatches within the same zone
-- Avoid incompatible mixing (e.g., NORTH_ZONE + SOUTH_ZONE)
-- Delivery rules:
-  - All orders ≤ 7 days
-  - Paid orders ≤ 3 days
-  - Star clients higher priority
-  - New clients higher priority
-  - Mandatory orders must go out today
-  - Optional time windows (e.g., 10:00–14:00)
 
+| Constraint | Description        |
+|------------|-------|
+| Depot | Factory in Buenos Aires industrial zone |
+| Fleet | Single truck |
+| Capacity | 8 pallets per dispatch |
+| Typical load | ~10 orders per trip |
 
----
-
-
-## Data & System Design
-Instead of assuming clean tables, the system is designed around a realistic pipeline:
-
-- Input: DOCX/Excel receipts with inconsistent structures
-- Core entities: zones, localities, clients, products, orders, order items
-- Enrichment: geocoding → coordinates → zone assignment
-- Persistence: SQLite database for traceability and auditability
-- Outputs (current): normalized orders stored in DB + extraction artifacts
-
+**Delivery Rules:**
+- All orders must be delivered within **7 days**
+- Paid orders prioritized for delivery within **3 days**
+- **Star clients** receive higher priority
+- **New clients** receive higher priority (relationship building)
+- **Mandatory orders** must go out today (hard constraint)
+- Prefer **single-zone dispatches** to minimize route dispersion
+- Avoid incompatible zone mixing (e.g., NORTH_ZONE + SOUTH_ZONE)
 
 ---
 
+## System Architecture
 
-## Methodology (Phase-Based, Production-Oriented)
+```
+┌──────────────┐   ┌──────────────┐   ┌────────────┐   ┌──────────────┐
+│ PDF Receipts │──▶│ AI Extraction│──▶│ Validation │──▶│ Priority   │
+│ (Variable)   │   │ (Gemini 2.5) │   │ (Pydantic) │   │ Score        │
+└──────────────┘   └──────────────┘   └────────────┘   └──────┬───────┘
+                                                              │
+┌──────────────┐   ┌──────────────┐   ┌───────────────────────▼───────────┐
+│ Route Maps   │◀──│ TSP Optimizer│◀─│ Dispatch Candidates Generator     │
+│ (Folium)     │   │ (OR-Tools)   │   │ (Multi-strategy)                  │
+└──────────────┘   └──────────────┘   └───────────────────────────────────┘
 
-### Phase 1 — Base Data Setup (Implemented)
-Goal: Create the operational backbone (database + reference geography + synthetic portfolio data).
+                     ┌──────────────────────────┐
+                     │     SQLite Database      │
+                     │ (Shared Persistence)     │
+                     └──────────────────────────┘
 
-- SQLite database initialized via SQLAlchemy
+```
+
+---
+
+## Methodology (5-Phase Pipeline)
+
+### Phase 1 — Base Data Setup 
+**Goal**: Create the operational backbone (database + reference geography + synthetic portfolio data).
+
+- SQLite database initialized via SQLAlchemy with full relational schema
 - Reference datasets:
-  - zones.json (CABA, NORTH_ZONE, SOUTH_ZONE, WEST_ZONE + colors)
-  - localities.json (~80 localities with coordinates + zone mapping)
-- Seed data for portfolio demonstration:
-  - products (3 main types + 1 special)
-  - synthetic clients
-  - synthetic historical orders
-- Notebook: notebooks/01_base_data_setup.ipynb
-  - basic validation queries
-  - Plotly charts (orders by zone, etc.)
-  - Folium map of client distribution
+  - `zones.json` — 4 zones (CABA, NORTH_ZONE, SOUTH_ZONE, WEST_ZONE) with visualization colors
+  - `localities.json` — ~80 localities with coordinates + zone mapping
+- Seed data for demonstration:
+  - 4 product types (3 main + 1 special)
+  - Synthetic clients across all zones
+  - Synthetic historical orders
+- **Notebook**: [01_base_data_setup.ipynb](notebooks/01_base_data_setup.ipynb)
+  - Database validation queries
+  - Plotly EDA charts (orders by zone, client distribution)
+  - Folium map of client locations
 
+### Phase 2 — Receipt Extraction (Document AI)
+**Goal**: Convert unstructured receipts into normalized order records.
 
-### Phase 2 — Receipt Extraction (Document AI) (Implemented)
-Goal: Convert unstructured receipts into a normalized order record.
-
-- PDF ingestion (uploaded to Gemini)
-- LLM-based extraction with Google Gemini (via `google-genai`)
-- Output enforced with Pydantic v2 schemas (type safety + required fields)
+- PDF ingestion with image conversion for Gemini processing
+- LLM-based extraction using **Google Gemini 2.5 Flash**
+- Pydantic v2 schema validation (type safety + required fields)
 - Handles variability across vendors and document layouts
-- Extracts:
-  - delivery address (may differ from billing address)
-  - billing data
-  - issue date
-  - items (product type + quantities)
-  - total amount (when present)
-- Geocoding via Geopy + Nominatim
-- Cached geocoding results in the SQLite table `geocoding_cache` to reduce repeated calls
-- Extraction traceability:
-  - raw extraction JSON stored in the SQLite table `processed_receipts`
-  - confidence fields available for monitoring / QA
+- Extracts: delivery address, billing data, issue date, items, totals
+- Geocoding via Geopy + Nominatim with persistent SQLite cache
+- Extraction artifacts stored in `processed_receipts` table for traceability
+- **Notebook**: [02_receipt_extraction.ipynb](notebooks/02_receipt_extraction.ipynb)
 
-Notebook: notebooks/02_receipt_extraction.ipynb
+### Phase 3 — Priority Scoring
+**Goal**: Calculate priority scores to rank orders for dispatch selection.
 
-Showcase:
-- Notebook: notebooks/demo_showcase.ipynb (generates Folium maps)
-- Streamlit viewer: output/streamlit_apps/showcase_map.py (renders the generated HTML map)
+- Configurable scoring weights via `scoring_weights.json`
+- Four scoring components:
+  - **Urgency (40%)**: Days until deadline, overdue bonus
+  - **Payment (25%)**: Order value × payment status multiplier
+  - **Client (20%)**: Star > New > Frequent > Regular > Occasional
+  - **Age (15%)**: Days since order placement
+- Mandatory orders receive priority score of **999,999** (hard constraint)
+- Scores persisted to database for reuse
+- **Notebook**: [03_priority_score.ipynb](notebooks/03_priority_score.ipynb)
+  - Score distribution analysis
+  - Component breakdown visualization
+  - Radar charts for order comparison
 
+### Phase 4 — Order Selection (Dispatch Candidates)
+**Goal**: Generate optimal dispatch candidates under capacity constraints.
+
+- Multiple selection strategies:
+  - **Greedy Efficiency**: Maximize priority/pallet ratio
+  - **Greedy Priority**: Maximize total priority
+  - **Zone-Based**: Single-zone dispatches (CABA, North, South, West)
+  - **DP Optimal**: Dynamic programming for true optimal solution
+  - **Mandatory First**: Ensure mandatory orders are included
+  - **Best Fit**: Balance utilization and priority
+- Zone dispersion penalties discourage mixed-zone dispatches
+- Configurable via `order_selector_config.json`
+- Outputs: `dispatch_candidates.json`, `dispatch_summary.csv`
+- **Notebook**: [04_order_selector.ipynb](notebooks/04_order_selector.ipynb)
+  - Strategy comparison charts
+  - Utilization vs priority trade-off analysis
+
+### Phase 5 — Route Optimization
+**Goal**: Optimize delivery sequences and generate route maps.
+
+- **OR-Tools** constraint solver for TSP/VRP problems
+- Multiple solver strategies:
+  - Nearest Neighbor (fast heuristic)
+  - OR-Tools Guided Local Search (optimal)
+  - Christofides-inspired approaches
+- Haversine distance calculations for accurate routing
+- Persistent route cache in SQLite to avoid recalculation
+- Interactive **Folium maps** with:
+  - Numbered stop markers
+  - Route polylines with distance annotations
+  - Zone color coding
+  - Depot marker
+- Configurable via `routing_config.json`
+- Outputs: `ranked_dispatches_with_routes.json`, `top_dispatch.json`, route HTML maps
+- **Notebook**: [05_route_optimizer.ipynb](notebooks/05_route_optimizer.ipynb)
+  - Solver comparison analysis
+  - Route visualization
+  - Distance/time estimation
 
 ---
 
+## Interactive Showcase (Streamlit)
 
-## Implementation Checklist
+A multi-page Streamlit application demonstrates the complete pipeline:
 
-### Foundations
-- [x] Define database schema (orders, order_items, clients, products, zones, localities, dispatches, caches)
-- [x] Initialize SQLite DB via SQLAlchemy
-- [x] Create zones.json (4 zones + visualization colors)
-- [x] Create localities.json (~80 localities + coordinates + zone mapping)
-- [x] Populate products table (3 main + 1 special)
-- [x] Generate synthetic clients and historical orders
-- [x] Notebook 01: setup + Plotly EDA + Folium client map
+[📍 Streamlit App](https://ssantioviedo-eco-bags-delivery-optimizer.streamlit.app/)
 
-### Document Extraction
-- [x] Process PDF receipts
-- [x] LLM extraction (Gemini) with robust prompting for variable formats
-- [x] Pydantic validation + fallback handling for partial failures
-- [x] Geocode delivery address (Nominatim)
-- [x] Cache geocoding results
-- [x] Assign zone based on locality / reference data
-- [x] Persist processed receipts + extraction artifacts
-- [x] Notebook 02: extraction demo + persisted orders
 
-### Priority & Optimization (Planned)
-- [ ] Priority scoring module with configurable weights
-- [ ] Mandatory-order enforcement (hard constraint)
-- [ ] Dispatch selection (produce K candidate dispatches)
-- [ ] Zone dispersion penalties + “incompatible zone” constraints
-- [ ] Candidate comparison metrics (utilization, zone mix, priority)
-
-### Routing & Outputs (Planned)
-- [ ] TSP route sequencing per candidate dispatch
-- [ ] Time window handling (soft/heuristic ordering)
-- [ ] Route distance/time estimation
-- [ ] Folium route maps per candidate
-- [ ] Export confirmed dispatch as JSON
-- [ ] Full pipeline demo notebook
-
+**Features**:
+- **Data Overview**: Geographic coverage map, KPI dashboard
+- **Receipt Extraction**: Live demo of AI extraction with confidence scores
+- **Priority Scoring**: Interactive weight adjustment, score recalculation
+- **Order Selection**: Strategy comparison, dispatch candidate explorer
+- **Route Optimization**: Interactive route maps, solver comparison
 
 ---
-
 
 ## Project Structure
 
 ```text
 Eco-Bags-Delivery-Optimizer/
-├── README.md
-├── AGENTS.md
-├── pyproject.toml
-├── poetry.lock
-├── .env.example
+├── README.md                    # Project documentation
+├── AGENTS.md                    # AI agent instructions
+├── pyproject.toml               # Poetry dependencies
+├── poetry.lock                  # Locked dependencies
+├── streamlit_app.py             # Interactive showcase application
 │
-├── src/
+├── src/                         # Core Python modules
 │   ├── __init__.py
-│   ├── database.py
-│   ├── schemas.py
-│   ├── geo.py
-│   └── extraction.py
+│   ├── database.py              # SQLAlchemy models & DatabaseManager
+│   ├── schemas.py               # Pydantic validation schemas
+│   ├── extraction.py            # LLM-based document parsing (Gemini)
+│   ├── geo.py                   # Geocoding and distance utilities
+│   ├── scoring.py               # Priority calculation engine
+│   ├── order_selector.py        # Dispatch candidate generation
+│   ├── routing.py               # TSP/VRP optimization (OR-Tools)
+│   ├── app_utils.py             # Streamlit helper functions
+│   └── extract_receipts_for_app.py  # Batch extraction utility
 │
-├── notebooks/
-│   ├── 01_base_data_setup.ipynb
-│   ├── 02_receipt_extraction.ipynb
-│   └── demo_showcase.ipynb
+├── notebooks/                   # Development & demo notebooks
+│   ├── 01_base_data_setup.ipynb       # Database + reference data
+│   ├── 02_receipt_extraction.ipynb    # AI extraction pipeline
+│   ├── 03_priority_score.ipynb        # Scoring analysis
+│   ├── 04_order_selector.ipynb        # Dispatch generation
+│   ├── 05_route_optimizer.ipynb       # Route optimization
+│   └── doc_extractor_demo.ipynb       # Extraction showcase
 │
 ├── data/
-│   ├── geo/
-│   │   ├── zones.json
-│   │   └── localities.json
+│   ├── config/                  # Configuration files
+│   │   ├── scoring_weights.json       # Priority weight settings
+│   │   ├── order_selector_config.json # Dispatch selection settings
+│   │   └── routing_config.json        # Route optimization settings
+│   ├── geo/                     # Geographic reference data
+│   │   ├── zones.json                 # Zone definitions + colors
+│   │   └── localities.json            # Locality coordinates
 │   ├── raw/
-│   │   └── receipts/  # PDF examples
+│   │   └── receipts/            # Input PDF/image receipts
 │   └── processed/
-│       └── delivery.db
+│       └── extracted_receipts.json    # Extraction results cache
 │
-└── output/
-    ├── dispatches/
-    ├── maps/
-    └── streamlit_apps/
-    └── showcase_map.py
+├── output/
+│   ├── priority_scores.csv      # Calculated priority scores
+│   ├── dispatches/              # Dispatch candidate outputs
+│   │   ├── dispatch_candidates.json
+│   │   ├── dispatch_summary.csv
+│   │   ├── ranked_dispatches_with_routes.json
+│   │   └── top_dispatch.json
+│   ├── maps/                    # Generated Folium HTML maps
+│   │   ├── client_distribution.html
+│   │   ├── delivery_locations.html
+│   │   ├── top_dispatch_route.html
+│   │   ├── top3_routes_comparison.html
+│   │   └── best_single_zone_route.html
+│   ├── plots/                   # Generated chart images
+│   └── streamlit_apps/          # Legacy Streamlit components
+│
+└── prompts/                     # Development prompts archive
 ```
 
 ---
-
 
 ## How to Run Locally
 
 ```bash
+# Clone the repository
 git clone https://github.com/ssantioviedo/Eco-Bags-Delivery-Optimizer.git
 cd Eco-Bags-Delivery-Optimizer
 
+# Install dependencies
 poetry install
 
-# Notebooks
+# Run Jupyter notebooks
 poetry run jupyter lab
 
-# Streamlit showcase (renders the generated HTML map)
-poetry run streamlit run output/streamlit_apps/showcase_map.py
+# Launch Streamlit showcase
+poetry run streamlit run streamlit_app.py
 ```
 
-Environment:
-- Copy .env.example → .env
-- Set GEMINI_API_KEY in .env (the real .env is ignored by git)
-
-
----
-
-
-## Next Steps
-Immediate next implementation milestones:
-
-- Implement priority scoring (configurable weights)
-- Implement dispatch selection (capacity constraint + zone penalties)
-- Implement routing (sequencing + distance/time estimation)
-- Add export + maps for candidate dispatches
-
+**Environment Setup:**
+- Copy `.env.example` → `.env`
+- Set `GEMINI_API_KEY` in `.env` (required for receipt extraction)
+- The `.env` file is ignored by git for security
 
 ---
-
 
 ## What This Project Demonstrates
-- Designing around messy real inputs (documents), not idealized datasets
-- Schema-first engineering with validation and auditability (Pydantic + SQLite)
-- Geospatial enrichment for operational decision-making (geocoding + zoning)
-- A modular path from raw receipts → dispatch optimization → route planning
+
+- **Real-world input handling**: Processing messy documents, not idealized datasets
+- **Schema-first engineering**: Validation and auditability with Pydantic + SQLite
+- **Geospatial enrichment**: Geocoding + zone assignment for operational decisions
+- **Multi-strategy optimization**: Comparing different algorithms for dispatch selection
+- **Production patterns**: Caching, configuration files, modular architecture
+- **End-to-end pipeline**: From raw receipts → dispatch optimization → route planning
+
+---
 
 ## Author
 
 **Santiago Oviedo** | *Data Scientist*
 
-🔗 **LinkedIn**: https://linkedin.com/in/ssantioviedo
+🔗 **LinkedIn**: [linkedin.com/in/ssantioviedo](https://linkedin.com/in/ssantioviedo)
