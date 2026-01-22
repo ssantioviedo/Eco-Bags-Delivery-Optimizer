@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_bd4e67f196003ff37d7538b8be071ce0 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_bd4e67f196003ff37d7538b8be071ce0" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_bd4e67f196003ff37d7538b8be071ce0 = L.map(
+                "map_bd4e67f196003ff37d7538b8be071ce0",
+                {
+                    center: [-34.63541114162983, -58.41471461097791],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_cbf4d1656f9792ada3c043d1b46258b8 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_cbf4d1656f9792ada3c043d1b46258b8.addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var poly_line_50f6a085f69914ece1f67b55b56156c7 = L.polyline(
+                [[-34.73231090267173, -58.295889556357935], [-34.7625712, -58.1988198], [-34.71901237389321, -58.25722306558015], [-34.68180552088784, -58.3456173916246], [-34.58926150664434, -58.39440842891707], [-34.57052494629247, -58.49498940244819], [-34.382038, -58.7370714], [-34.645764682649045, -58.593697842895324], [-34.73231090267173, -58.295889556357935]],
+                {"bubblingMouseEvents": true, "color": "#5B21B6", "dashArray": "10", "dashOffset": null, "fill": false, "fillColor": "#5B21B6", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var marker_2b134ec373b776c407101814fe9d2dba = L.marker(
+                [-34.73231090267173, -58.295889556357935],
+                {
+}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var icon_cbc6acc8c71a25a81cb494a112e94b50 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "industry",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_da10234f87c9260cb525e320e4727037 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_be82fc3149e4fe00c6a95e05e1a445f6 = $(`<div id="html_be82fc3149e4fe00c6a95e05e1a445f6" style="width: 100.0%; height: 100.0%;"><b>ECO-BAGS</b><br>Start: 08:00:00</div>`)[0];
+                popup_da10234f87c9260cb525e320e4727037.setContent(html_be82fc3149e4fe00c6a95e05e1a445f6);
+            
+        
+
+        marker_2b134ec373b776c407101814fe9d2dba.bindPopup(popup_da10234f87c9260cb525e320e4727037)
+        ;
+
+        
+    
+    
+            marker_2b134ec373b776c407101814fe9d2dba.bindTooltip(
+                `<div>
+                     Depot: ECO-BAGS
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2b134ec373b776c407101814fe9d2dba.setIcon(icon_cbc6acc8c71a25a81cb494a112e94b50);
+            
+    
+            var marker_d2be6f0c49011a8cfc9309467a405eaf = L.marker(
+                [-34.7625712, -58.1988198],
+                {
+}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var div_icon_1d0e44c04e42586902052d1a90bcee03 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color: #5B21B6; color: white; \n                                border-radius: 50%; width: 24px; height: 24px;\n                                display: flex; align-items: center; justify-content: center;\n                                font-weight: bold; font-size: 12px; border: 2px solid white;\"\u003e\n                        1\n                    \u003c/div\u003e\n                    ",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_cce967e5ded8782f56ac49f3247ecc24 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6d32e51f20072580ca586023de49aba3 = $(`<div id="html_6d32e51f20072580ca586023de49aba3" style="width: 100.0%; height: 100.0%;">             <b>Stop 1: Juguetería Fran Cardozo</b><br>             Arrival: 08:19:00<br>             Distance from prev: 9.5 km             </div>`)[0];
+                popup_cce967e5ded8782f56ac49f3247ecc24.setContent(html_6d32e51f20072580ca586023de49aba3);
+            
+        
+
+        marker_d2be6f0c49011a8cfc9309467a405eaf.bindPopup(popup_cce967e5ded8782f56ac49f3247ecc24)
+        ;
+
+        
+    
+    
+            marker_d2be6f0c49011a8cfc9309467a405eaf.bindTooltip(
+                `<div>
+                     Stop 1: Juguetería Fran Cardozo
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d2be6f0c49011a8cfc9309467a405eaf.setIcon(div_icon_1d0e44c04e42586902052d1a90bcee03);
+            
+    
+            var marker_58f6224731297103d4052b31399157a5 = L.marker(
+                [-34.71901237389321, -58.25722306558015],
+                {
+}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var div_icon_23d5f9f698dbfbddce6f4e5e5d30fd52 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color: #5B21B6; color: white; \n                                border-radius: 50%; width: 24px; height: 24px;\n                                display: flex; align-items: center; justify-content: center;\n                                font-weight: bold; font-size: 12px; border: 2px solid white;\"\u003e\n                        2\n                    \u003c/div\u003e\n                    ",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_e1370366f018b885e5e77b75246e06d8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7214053f400190d9ff557206774662e5 = $(`<div id="html_7214053f400190d9ff557206774662e5" style="width: 100.0%; height: 100.0%;">             <b>Stop 2: Supermercado Don Pedro</b><br>             Arrival: 08:49:00<br>             Distance from prev: 7.2 km             </div>`)[0];
+                popup_e1370366f018b885e5e77b75246e06d8.setContent(html_7214053f400190d9ff557206774662e5);
+            
+        
+
+        marker_58f6224731297103d4052b31399157a5.bindPopup(popup_e1370366f018b885e5e77b75246e06d8)
+        ;
+
+        
+    
+    
+            marker_58f6224731297103d4052b31399157a5.bindTooltip(
+                `<div>
+                     Stop 2: Supermercado Don Pedro
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_58f6224731297103d4052b31399157a5.setIcon(div_icon_23d5f9f698dbfbddce6f4e5e5d30fd52);
+            
+    
+            var marker_930ae2b5d8824fdc750626f33c026e90 = L.marker(
+                [-34.68180552088784, -58.3456173916246],
+                {
+}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var div_icon_874dca9f3f2fb30addc9de6254b8295b = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color: #5B21B6; color: white; \n                                border-radius: 50%; width: 24px; height: 24px;\n                                display: flex; align-items: center; justify-content: center;\n                                font-weight: bold; font-size: 12px; border: 2px solid white;\"\u003e\n                        3\n                    \u003c/div\u003e\n                    ",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_d0cb253c87cd6cec6e064e13623c6c39 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c898f1676ae953e2878a3adaffe3e32b = $(`<div id="html_c898f1676ae953e2878a3adaffe3e32b" style="width: 100.0%; height: 100.0%;">             <b>Stop 3: Comercial Rivadavia</b><br>             Arrival: 09:23:00<br>             Distance from prev: 9.1 km             </div>`)[0];
+                popup_d0cb253c87cd6cec6e064e13623c6c39.setContent(html_c898f1676ae953e2878a3adaffe3e32b);
+            
+        
+
+        marker_930ae2b5d8824fdc750626f33c026e90.bindPopup(popup_d0cb253c87cd6cec6e064e13623c6c39)
+        ;
+
+        
+    
+    
+            marker_930ae2b5d8824fdc750626f33c026e90.bindTooltip(
+                `<div>
+                     Stop 3: Comercial Rivadavia
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_930ae2b5d8824fdc750626f33c026e90.setIcon(div_icon_874dca9f3f2fb30addc9de6254b8295b);
+            
+    
+            var marker_d29cc0cc8afd0fe0e9f4eb3db43004ad = L.marker(
+                [-34.58926150664434, -58.39440842891707],
+                {
+}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var div_icon_22cd3831ff800e755003c9255d95dafc = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color: #5B21B6; color: white; \n                                border-radius: 50%; width: 24px; height: 24px;\n                                display: flex; align-items: center; justify-content: center;\n                                font-weight: bold; font-size: 12px; border: 2px solid white;\"\u003e\n                        4\n                    \u003c/div\u003e\n                    ",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_15e75a1fa27f7801ae6f5976c6c88f90 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1eb684fad4f63c2245de947808220975 = $(`<div id="html_1eb684fad4f63c2245de947808220975" style="width: 100.0%; height: 100.0%;">             <b>Stop 4: Comercial El Puente</b><br>             Arrival: 10:01:00<br>             Distance from prev: 11.2 km             </div>`)[0];
+                popup_15e75a1fa27f7801ae6f5976c6c88f90.setContent(html_1eb684fad4f63c2245de947808220975);
+            
+        
+
+        marker_d29cc0cc8afd0fe0e9f4eb3db43004ad.bindPopup(popup_15e75a1fa27f7801ae6f5976c6c88f90)
+        ;
+
+        
+    
+    
+            marker_d29cc0cc8afd0fe0e9f4eb3db43004ad.bindTooltip(
+                `<div>
+                     Stop 4: Comercial El Puente
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d29cc0cc8afd0fe0e9f4eb3db43004ad.setIcon(div_icon_22cd3831ff800e755003c9255d95dafc);
+            
+    
+            var marker_e8ccd58bb8aa77c8132c54a7c29567ff = L.marker(
+                [-34.57052494629247, -58.49498940244819],
+                {
+}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var div_icon_4f61ecef304728bfddc1170d3fe5be85 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color: #5B21B6; color: white; \n                                border-radius: 50%; width: 24px; height: 24px;\n                                display: flex; align-items: center; justify-content: center;\n                                font-weight: bold; font-size: 12px; border: 2px solid white;\"\u003e\n                        5\n                    \u003c/div\u003e\n                    ",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_2ce699f7dffdc64b39808971f4b1089e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e1de7745343509e3c72af05f2ed77140 = $(`<div id="html_e1de7745343509e3c72af05f2ed77140" style="width: 100.0%; height: 100.0%;">             <b>Stop 5: Mayorista Santa Fe</b><br>             Arrival: 10:35:00<br>             Distance from prev: 9.4 km             </div>`)[0];
+                popup_2ce699f7dffdc64b39808971f4b1089e.setContent(html_e1de7745343509e3c72af05f2ed77140);
+            
+        
+
+        marker_e8ccd58bb8aa77c8132c54a7c29567ff.bindPopup(popup_2ce699f7dffdc64b39808971f4b1089e)
+        ;
+
+        
+    
+    
+            marker_e8ccd58bb8aa77c8132c54a7c29567ff.bindTooltip(
+                `<div>
+                     Stop 5: Mayorista Santa Fe
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e8ccd58bb8aa77c8132c54a7c29567ff.setIcon(div_icon_4f61ecef304728bfddc1170d3fe5be85);
+            
+    
+            var marker_f1ee900ced0bc0fa3ec5bafe7cf69151 = L.marker(
+                [-34.382038, -58.7370714],
+                {
+}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var div_icon_f5d839151850933c1acc5c88dc016e6b = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color: #5B21B6; color: white; \n                                border-radius: 50%; width: 24px; height: 24px;\n                                display: flex; align-items: center; justify-content: center;\n                                font-weight: bold; font-size: 12px; border: 2px solid white;\"\u003e\n                        6\n                    \u003c/div\u003e\n                    ",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_3d2ac3dedfb61262fa06d9d91056d651 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_553bc6f4266c8e7895cce20785f52437 = $(`<div id="html_553bc6f4266c8e7895cce20785f52437" style="width: 100.0%; height: 100.0%;">             <b>Stop 6: Mayorista El Gaucho</b><br>             Arrival: 11:52:00<br>             Distance from prev: 30.5 km             </div>`)[0];
+                popup_3d2ac3dedfb61262fa06d9d91056d651.setContent(html_553bc6f4266c8e7895cce20785f52437);
+            
+        
+
+        marker_f1ee900ced0bc0fa3ec5bafe7cf69151.bindPopup(popup_3d2ac3dedfb61262fa06d9d91056d651)
+        ;
+
+        
+    
+    
+            marker_f1ee900ced0bc0fa3ec5bafe7cf69151.bindTooltip(
+                `<div>
+                     Stop 6: Mayorista El Gaucho
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f1ee900ced0bc0fa3ec5bafe7cf69151.setIcon(div_icon_f5d839151850933c1acc5c88dc016e6b);
+            
+    
+            var marker_c6538b9b066a53fd6da034766797c0c9 = L.marker(
+                [-34.645764682649045, -58.593697842895324],
+                {
+}
+            ).addTo(map_bd4e67f196003ff37d7538b8be071ce0);
+        
+    
+            var div_icon_f448b91c51af3cf36d24b9a1070cd1e6 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color: #5B21B6; color: white; \n                                border-radius: 50%; width: 24px; height: 24px;\n                                display: flex; align-items: center; justify-content: center;\n                                font-weight: bold; font-size: 12px; border: 2px solid white;\"\u003e\n                        7\n                    \u003c/div\u003e\n                    ",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_e1d986a47b6bbba314c4fcd332b76e63 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_876ce21513d1c196e5709ff9674fb2c7 = $(`<div id="html_876ce21513d1c196e5709ff9674fb2c7" style="width: 100.0%; height: 100.0%;">             <b>Stop 7: Supermercado Norte</b><br>             Arrival: 13:12:00<br>             Distance from prev: 32.1 km             </div>`)[0];
+                popup_e1d986a47b6bbba314c4fcd332b76e63.setContent(html_876ce21513d1c196e5709ff9674fb2c7);
+            
+        
+
+        marker_c6538b9b066a53fd6da034766797c0c9.bindPopup(popup_e1d986a47b6bbba314c4fcd332b76e63)
+        ;
+
+        
+    
+    
+            marker_c6538b9b066a53fd6da034766797c0c9.bindTooltip(
+                `<div>
+                     Stop 7: Supermercado Norte
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c6538b9b066a53fd6da034766797c0c9.setIcon(div_icon_f448b91c51af3cf36d24b9a1070cd1e6);
+            
+</script>
+</html>
